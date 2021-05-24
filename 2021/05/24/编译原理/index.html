@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="文法和语言终结符和非终结符 终结符可以简单地理解为「推导到这里就终结了」，也就是说不能再继续通过生成式向下推倒的元素就是终结符。 比如 T-&gt;abc。T 推导为串 abc 后已经得到了实质上的字符，不用在向下推导了，那么 T 为非终结符，abc 无法继续推导，则为终结符。（在一系列生成式中，式子左边的一定是非终结符，从未出现在式子左边的一定是终结符） 句子与句型 如果符号串x是由起始符号推导">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译原理">
+<meta property="og:url" content="http://example.com/2021/05/24/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Leonlist&#39;s Temporary Blog">
+<meta property="og:description" content="文法和语言终结符和非终结符 终结符可以简单地理解为「推导到这里就终结了」，也就是说不能再继续通过生成式向下推倒的元素就是终结符。 比如 T-&gt;abc。T 推导为串 abc 后已经得到了实质上的字符，不用在向下推导了，那么 T 为非终结符，abc 无法继续推导，则为终结符。（在一系列生成式中，式子左边的一定是非终结符，从未出现在式子左边的一定是终结符） 句子与句型 如果符号串x是由起始符号推导">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516181303298.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516193619828.png">
+<meta property="article:published_time" content="2021-05-24T06:38:57.000Z">
+<meta property="article:modified_time" content="2021-05-24T07:21:42.075Z">
+<meta property="article:author" content="Leonlist">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516181303298.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/05/24/编译原理/"/>
+
+
+
+
+
+  <title>编译原理 | Leonlist's Temporary Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leonlist's Temporary Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">临时博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/24/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leonlist's Temporary Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">编译原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-24T14:38:57+08:00">
+                2021-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="文法和语言"><a href="#文法和语言" class="headerlink" title="文法和语言"></a>文法和语言</h1><p><strong>终结符和非终结符</strong></p>
+<p>终结符可以简单地理解为「推导到这里就终结了」，也就是说不能再继续通过生成式向下推倒的元素就是终结符。</p>
+<p>比如 T-&gt;abc。T 推导为串 abc 后已经得到了实质上的字符，不用在向下推导了，那么 T 为非终结符，abc 无法继续推导，则为终结符。（在一系列生成式中，式子左边的一定是非终结符，从未出现在式子左边的一定是终结符）</p>
+<p><strong>句子与句型</strong></p>
+<p>如果符号串x是由起始符号推导出的，则称x是文法G[S]的句型。</p>
+<p>如果x中只包含终结符，则称x是文法G[S]的句子。</p>
+<p>文法描述的语言是该文法一切句子的集合。</p>
+<p><strong>四种文法</strong></p>
+<p>0型文法：α→β，其中α至少包含一个非终结符。</p>
+<p>1型文法（上下文有关文法）：α→β，其中|β|≥|α|，S→ε除外。</p>
+<p>2型文法（上下文无关文法）：a→β，其中a是一个非终结符。</p>
+<p>3型文法（规范文法）：A→a或A→aB.</p>
+<p>4种文法是逐渐增加限制的，所以规范文法一定是0型文法、1型文法、2型文法，上下文无关文法也一定是0型文法、1型文法…</p>
+<p><strong>上下文有关文法与上下文无关文法</strong></p>
+<p>在应用一个产生式进行推导时，前后已经推导出的部分结果就是上下文。上下文无关指，只要文法的定义里有某个产生式，不管一个非终结符前后的串是什么，就可以应用相应的产生式进行推导。</p>
+<p>上下文无关文法例子：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Code</span><br><span class="line">产生式：</span><br><span class="line">Sent -&gt; S V O</span><br><span class="line">S -&gt; 人 | <span class="type">天</span></span><br><span class="line"><span class="type">V</span> -&gt; 吃 | <span class="type">下</span></span><br><span class="line"><span class="type">O</span> -&gt; 雨 | <span class="type">雪 | 饭 | 肉</span></span><br></pre></td></tr></table></figure>
+
+<p>这个文法可以生成如下句子（共 16 种组合）：</p>
+<p>｛人吃饭，天下雨，人吃肉，天下雪，人下雪，天下饭，天吃肉，……｝</p>
+<p>可以看到，其中有一些搭配在语义上是不恰当的，例如”天吃肉“。其（最左）推导过程为：</p>
+<p>Sent -&gt; SVO -&gt; 天VO -&gt; 天吃O -&gt; 天吃肉</p>
+<p>而上下文有关文法例子如下：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Code</span><br><span class="line">Sent -&gt; S V O</span><br><span class="line">S -&gt; 人 | <span class="type">天</span></span><br><span class="line"><span class="type">人V</span> -&gt; 人吃</span><br><span class="line">天V -&gt; 天下</span><br><span class="line">下O -&gt; 下雨 | <span class="type">下雪</span></span><br><span class="line"><span class="type">吃O</span> -&gt; 吃饭 | <span class="type">吃肉</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，这里对 V 的推导过程施加了约束：虽然 V 还是能推出”吃“和”下“两个词，但是仅仅当 V 左边是”人“时，才允许它推导出”吃“；而当 V 左边是”天“时，允许它推导出”下“。这样通过上下文的约束，就保证了主谓搭配的一致性。类似地，包含 O 的产生式也约束了动宾搭配的一致性。（就是语法的强约束条件，导致上下文有关了）</p>
+<p>这样一来，这个语言包含的句子就只有｛人吃饭，天下雨，人吃肉，天下雪｝这四条，都是语义上合理的。</p>
+<p>以”人吃饭“为例，推导过程为：</p>
+<p>Sent -&gt; SVO -&gt; 人VO -&gt; 人吃O -&gt; 人吃饭</p>
+<p>（这与语法的歧义性还是不同的，要有所区分）</p>
+<p><strong>1型文法比2型文法识别的语言集合更大？</strong></p>
+<p>上例看到，感觉上下文有关文法所解释的句子集合更少。</p>
+<p>这里的“1型文法比2型文法<strong>识别的语言集合</strong>更大” 这里的集合不是产生的结果集（字符串集合），而是语言规则集。 2型文法规则一定是1型文法规则，而有些语言能用1型文法规则描述，但用2型文法规则描述不出来。</p>
+<h2 id="语法树"><a href="#语法树" class="headerlink" title="语法树"></a>语法树</h2><h3 id="最左推导-最右推导-规范句型"><a href="#最左推导-最右推导-规范句型" class="headerlink" title="最左推导/最右推导/规范句型"></a>最左推导/最右推导/规范句型</h3><p>例如 E+E   (i+i)：</p>
+<ul>
+<li>E+E =&gt; E+i =&gt; i+i  ——最右推导</li>
+<li>E+E =&gt; i+E =&gt; i+i   ——最左推导</li>
+</ul>
+<p><strong>最左推导</strong>是指：任何一步α=&gt; β都是对α中的最左非终结符进行替换。</p>
+<p>同样，可定义<strong>最右推导</strong>（又称规范推导）：任何一步α=&gt;β都是对α中的最右非终结符进行替换。</p>
+<p>由规范推导所得到的句型称为<strong>规范句型</strong>。</p>
+<h3 id="二义性"><a href="#二义性" class="headerlink" title="二义性"></a>二义性</h3><p>一个文法的某个句子对应两棵不同的语法树，则这个文法是二义的。</p>
+<p>或一个文法的某个句子有两个不同的最左（右）推导，则这个文法是二义的。</p>
+<p>人们已证明，二义性问题是不可判定的，即不存在一个算法，它能在有限步骤内，确切地判断一个文法是否是二义的。（做题时就画两颗不同的语法树来证明其二义性）</p>
+<h3 id="自上而下的分析法"><a href="#自上而下的分析法" class="headerlink" title="自上而下的分析法"></a>自上而下的分析法</h3><p>基本思想：从文法的开始符号出发，反复使用各种产生式，寻找“匹配”输入符号串的推导。即对任何输入符号串，从文法的开始符号（根结）出发，自上而下地为输入串建立一棵语法树，直到语法树结果正好是输入的符号串为止。</p>
+<h3 id="自下而上的分析法"><a href="#自下而上的分析法" class="headerlink" title="自下而上的分析法"></a>自下而上的分析法</h3><p>基本思想：从输入串开始，逐步进行“归约”，直至归约到文法的开始符号。即从语法树的末端开始，步步向上“归约”，直到根结。</p>
+<h3 id="短语、直接短语、句柄"><a href="#短语、直接短语、句柄" class="headerlink" title="短语、直接短语、句柄"></a>短语、直接短语、句柄</h3><ol>
+<li><p><strong>短语</strong></p>
+<p>令文法G，开始符号为S，αβδ是G的句型（即S=&gt;αβδ），如果S=&gt;αAδ且A=&gt;β，则称β是句型αβδ相对于非终结符A的短语。</p>
+</li>
+<li><p><strong>直接短语</strong></p>
+<p>如短语中有A=&gt;β，则称β是句型相对于规则A→β的直接短语。</p>
+</li>
+<li><p><strong>句柄</strong></p>
+<p>一个句型的最左直接短语称为该句型的句柄。</p>
+</li>
+</ol>
+<p>⒈ 先证明前提</p>
+<p>⒉ 给出语法树（注意文法是否是二义性的）</p>
+<p>　如题文法G[E]:   E→ E+E|E*E|(E) | i</p>
+<p>  证明i+i*i是G的一个句型，并指出这个句型的所有短语、直接短语、句柄。</p>
+<p>⒊ 根据每棵语法树得出短语、直接短语、句柄</p>
+<p>　（注意编号）</p>
+<h1 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h1><h2 id="NFA→-DFA的转换（NFA的确定化）"><a href="#NFA→-DFA的转换（NFA的确定化）" class="headerlink" title="NFA→ DFA的转换（NFA的确定化）"></a>NFA→ DFA的转换（NFA的确定化）</h2><h3 id="确定化的有关运算"><a href="#确定化的有关运算" class="headerlink" title="确定化的有关运算"></a>确定化的有关运算</h3><p><strong>（1）ε_closure(I) ——状态集合I的ε闭包(等价状态集)</strong></p>
+<p> 设I是状态集的一个子集，ε_closure(I)定义为：</p>
+<p>​    a.若S∈I，则S∈ε_closure(I)；</p>
+<p>​    b. 若S∈I，那么从S出发经过任意ε弧而能到达的任意状态S’都属于ε_closure(I)；</p>
+<p><strong>（2）Move(I, a)——状态集合I的a弧转换</strong></p>
+<p> 假定I是状态集的一个子集，a是Σ中的一个字符，定义</p>
+<p>​            Ia <strong>＝</strong> ε_closure(J)</p>
+<p>其中J是所有那些可从I中的某一状态出发经过一条a弧而到达的状态结的全体。</p>
+<p>　<strong>(3)Ia＝ ε_closure(Move(I, a))</strong></p>
+<h3 id="子集化的具体过程"><a href="#子集化的具体过程" class="headerlink" title="子集化的具体过程"></a>子集化的具体过程</h3><p>为了方便起见，令Σ中只有a,b两个字母，即Σ＝{a, b}</p>
+<p>（1）构造一张表，此表的每一行有三列，第一列为I，第二列为Ia，第二列为Ib。即</p>
+<table>
+<thead>
+<tr>
+<th align="center">I</th>
+<th align="center">Ia</th>
+<th align="center">Ib</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">ε_closure(K0)</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>首先置该表的第一列为ε_closure(K0)</p>
+<p>（2）一般而言，若某一行的第一列的状态子集已确定，例如记为I，则可以求出Ia和Ib</p>
+<p>（3）检查Ia和Ib是否已在表的第一列中出现，把未曾出现者填入到后面空行的第一列位置上。</p>
+<p>（4）对未重复Ia 、Ib的新行重复上述过程(2)、(3)，直到所有第二列和第三列的子集全部在第一列中出现</p>
+<p><strong>DFA 的初态位该表第一行第一列的状态</strong></p>
+<p><strong>DFA 的终态为含有原 NFA 的终态的状态子集</strong></p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516181303298.png" alt="image-20210516181303298" style="zoom:67%;" />
+
+<table>
+<thead>
+<tr>
+<th>I</th>
+<th>Ia</th>
+<th>Ib</th>
+<th>S</th>
+<th>a</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>{0,1,2,4,7}</td>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,4,5,6,7}</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,4,5,6,7,9}</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>{1,2,4,5,6,7}</td>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,4,5,6,7}</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>{1,2,4,5,6,7,9}</td>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,4,5,6,7,10}</td>
+<td>3</td>
+<td>1</td>
+<td>4</td>
+</tr>
+<tr>
+<td>{1,2,4,5,6,7,<strong>10</strong>}</td>
+<td>{1,2,3,4,6,7,8}</td>
+<td>{1,2,4,5,6,7}</td>
+<td><strong>4</strong></td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody></table>
+<h2 id="DFA的化简"><a href="#DFA的化简" class="headerlink" title="DFA的化简"></a>DFA的化简</h2><ol>
+<li>将得到的状态进行划分 ∏ ，划分为两部分，一部分为终态，一部分为为非终组。</li>
+<li>继续进行划分，通过其可以匹配的字符进行判断，若该组内所有成员匹配字符都落在同一组内，即不可再分，否则重新划分组</li>
+<li>若 ∏new = ∏ ，则进入步骤4，否则返回2</li>
+<li>在分组 ∏new 每个组中选取一个状态作为代表，代表DFA的最简状态。</li>
+</ol>
+<h2 id="正规式→NFA"><a href="#正规式→NFA" class="headerlink" title="正规式→NFA"></a>正规式→NFA</h2><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516193619828.png" alt="image-20210516193619828" style="zoom:67%;" />
+
+<h1 id="自顶向下语法分析方法"><a href="#自顶向下语法分析方法" class="headerlink" title="自顶向下语法分析方法"></a>自顶向下语法分析方法</h1><p>对于任一输入符号串，从文法的识别符号出发，根据当前的输入符号，<strong>唯一的确定一个产生式</strong>，用产生式的右部的符号串替代相应的非终结符往下推导，或构造一棵语法树。若能推导出输入串或构造语法树成功则输入串是句子，否则不是。</p>
+<h2 id="开始符号FIRST集合"><a href="#开始符号FIRST集合" class="headerlink" title="开始符号FIRST集合"></a>开始符号FIRST集合</h2><p><strong>理解</strong></p>
+<p>FIRST(A)是以A开始符的集合，A的所有可能推导的开头终结符或者是ε</p>
+<p><strong>例子</strong></p>
+<ol>
+<li><p>后面跟的不是非终结符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">A-&gt;aB|ε</span><br><span class="line">A-&gt;c</span><br><span class="line">...</span><br><span class="line">First(A)&#x3D;&#123;a,ε,c&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>后面跟非终结符（一）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">A-&gt;Ba</span><br><span class="line">A-&gt;b</span><br><span class="line">...</span><br><span class="line">First(A)&#x3D;&#123;b&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>后面跟的非终结符（二）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">A-&gt;Bc</span><br><span class="line">B-&gt;b|ε</span><br><span class="line">...</span><br><span class="line">First(A)&#x3D;&#123;b,c&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>后面跟的非终结符（三）</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">A-&gt;BC</span><br><span class="line">B-&gt;b|<span class="type">ε</span></span><br><span class="line"><span class="type">C</span>-&gt;c|<span class="type">ε</span></span><br><span class="line"><span class="type">...</span></span><br><span class="line"><span class="type">First</span>(A)=&#123;b,c,ε&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>构造文法G的每一文法符号X，X ∈ (VT∪VN)</p>
+<ul>
+<li><p>如果 X 是终结符号，那么FIRST(X)={X}</p>
+</li>
+<li><p>如果 X 是非终结符号，且 X -&gt; Y1Y2Y3…Yk 是产生式</p>
+<ul>
+<li>如果a在FIRST(Yi)中，且 ε 在FIRST(Y1)，FIRST(Y2)，…，FIRST(Yi-1)中，那么a也在FIRST(X)中；</li>
+<li>如果ε 在FIRST(Y1)，FIRST(Y2)，…，FIRST(Yk)中，那么ε在FIRST(X)中；</li>
+</ul>
+</li>
+<li><p>如果X是非终结符号，且有X-&gt;ε，那么ε在FIRST(X)中</p>
+</li>
+</ul>
+<h2 id="后跟符号FOLLOW集合"><a href="#后跟符号FOLLOW集合" class="headerlink" title="后跟符号FOLLOW集合"></a>后跟符号FOLLOW集合</h2><p><strong>理解</strong></p>
+<p>Follow(A)为非终结符A后跟符号的集合，Follow(A)是所有句型中出现在紧接A之后的终结符或’#‘</p>
+<p><strong>求解规则</strong></p>
+<p>将标记 # 放到 FOLLOW(S) 中</p>
+<p>按照下面两个规则<strong>不断迭代</strong>，直到所有的 FOLLOW 集合都不再增长为止</p>
+<ul>
+<li>如果存在产生式 A -&gt; αBβ ，那么 FIRST(β) 中所有非 ε 的符号都在 FOLLOW(B) 中；</li>
+<li>如果存在产生式 A -&gt; αB，或者 A -&gt; αBβ 且 FIRST(β) 包含 ε，那么 FOLLOW(A) 中的所有符号都加入到 FOLLOW(B) 中</li>
+</ul>
+<p><strong>理解求解规则</strong></p>
+<ol>
+<li><p>将标记 # 放到 FOLLOW(S) 中</p>
+</li>
+<li><p>形如A -&gt; αBβ</p>
+<p>（α可以是终结符或者非终结符或者直接为空，β可以是终结符或者非终结符，注意β不能为空，B后面要有东西）</p>
+<p>比如</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">A-&gt;B</span><br><span class="line">A-&gt;cB</span><br><span class="line"></span><br><span class="line">A-&gt;dBC</span><br><span class="line">C-&gt;ε</span><br></pre></td></tr></table></figure>
+
+<p>那么 FOLLOW(A) 中的所有符号都加入到 FOLLOW(B) 中</p>
+<p><strong>例子一</strong></p>
+<p>注意：[if] 是一个终结符，同理[b] [other] [else] [then]</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">G(S)：S-&gt;IETSP|<span class="type">O</span></span><br><span class="line">I-&gt;<span class="keyword">if</span></span><br><span class="line">E-&gt;b</span><br><span class="line">O-&gt;other</span><br><span class="line">L-&gt;<span class="keyword">else</span></span><br><span class="line">T-&gt;<span class="keyword">then</span></span><br><span class="line">P-&gt;LS|<span class="type">ε</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th><strong>First</strong></th>
+<th><strong>Follow</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>First(S)={if,other}</td>
+<td>Follow(S)={井号 ,else}</td>
+</tr>
+<tr>
+<td>First(I)={if}</td>
+<td>Follow(I)={b}</td>
+</tr>
+<tr>
+<td>First(E)={b}</td>
+<td>Follow(E)={then}</td>
+</tr>
+<tr>
+<td>First(O)={other}</td>
+<td>Follow(O)={else,井号}</td>
+</tr>
+<tr>
+<td>First(L)={else}</td>
+<td>Follow(L)={if,other}</td>
+</tr>
+<tr>
+<td>First(P)={else,ε}</td>
+<td>Follow(P)={else,井号}</td>
+</tr>
+<tr>
+<td>First(T)={then}</td>
+<td>Follow(T)={if,other}</td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h2 id="Select集合"><a href="#Select集合" class="headerlink" title="Select集合"></a>Select集合</h2><p><strong>理解</strong></p>
+<ol>
+<li>如果a不能=&gt;ε，则 Select(A-&gt;a)=First(a)</li>
+<li>如果a=&gt;ε，则 Select(A-&gt;a)=(First(a)-{ε})UFollow(A)</li>
+</ol>
+<h2 id="LL-1-文法的判别"><a href="#LL-1-文法的判别" class="headerlink" title="LL(1) 文法的判别"></a>LL(1) 文法的判别</h2><h3 id="满足定义"><a href="#满足定义" class="headerlink" title="满足定义"></a>满足定义</h3><ol>
+<li>求出能推出ε的非终结符</li>
+<li>求FIRST集合；</li>
+<li>求FOLLOW集合；</li>
+<li>计算SELECT集合。</li>
+<li>对同一非终结符的不同产生式求Select交集</li>
+</ol>
+<h2 id="某些非LL-1-文法到LL-1-文法的等价转换"><a href="#某些非LL-1-文法到LL-1-文法的等价转换" class="headerlink" title="某些非LL(1)文法到LL(1)文法的等价转换"></a>某些非LL(1)文法到LL(1)文法的等价转换</h2><h3 id="存在左公因子"><a href="#存在左公因子" class="headerlink" title="存在左公因子"></a>存在左公因子</h3><p>解决方法：提取左公因子</p>
+<p>若文法中存在形如：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">A-&gt;ay|<span class="type">ab</span>   </span><br><span class="line">两个产生式左部第一个符号相同，则不符合LL（<span class="number">1</span>）文法，指代不明，则表示存在左公因子</span><br><span class="line"></span><br><span class="line">解决方法：</span><br><span class="line">转换成 A-&gt;aM1,aM2，aM3....的形式：</span><br><span class="line">得：</span><br><span class="line">A-&gt;aM</span><br><span class="line">M-&gt;y|<span class="type">b</span></span><br><span class="line">则成功提取左公因子；</span><br></pre></td></tr></table></figure>
+
+<h3 id="存在左递归"><a href="#存在左递归" class="headerlink" title="存在左递归"></a>存在左递归</h3><p><strong>（1）直接左递归</strong> </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">A</span>-&gt;AB, <span class="selector-tag">A</span>∈Vn，<span class="selector-tag">B</span>属于V*</span><br></pre></td></tr></table></figure>
+
+<p>方法：左递归变右递归</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">P-&gt;β1P&#x27;|<span class="string">β2P&#x27;</span>|<span class="string">…</span>|<span class="string">βnP&#x27;</span></span><br><span class="line"><span class="string">P&#x27;-&gt;α1P&#x27;</span>|<span class="string">α2P&#x27;</span>|<span class="string">…</span>|<span class="string">αmP&#x27;</span>|<span class="string">ε</span></span><br></pre></td></tr></table></figure>
+
+<p>例：给定文法G(S):</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">E-&gt;E+T|<span class="type">T</span></span><br><span class="line">T-&gt;T*F|<span class="type">F</span></span><br><span class="line">F-&gt;(E)|<span class="type">i</span></span><br></pre></td></tr></table></figure>
+
+<p>消除其直接左递归G(E):</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">E-&gt;T<span class="string">E&#x27;</span></span><br><span class="line"><span class="string">E&#x27;</span>-&gt;+T<span class="string">E&#x27;|ε</span></span><br><span class="line"><span class="string">T-&gt;FT&#x27;</span></span><br><span class="line">T<span class="string">&#x27;-&gt;*FT&#x27;</span>|ε</span><br><span class="line">F-&gt;(E)|i</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>（2）间接左递归</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">A</span>-&gt;Bb</span><br><span class="line"><span class="selector-tag">B</span>-&gt;Aa</span><br><span class="line"><span class="selector-tag">A</span>,<span class="selector-tag">B</span>∈Vn，<span class="selector-tag">a</span>，<span class="selector-tag">b</span>属于V*</span><br></pre></td></tr></table></figure>
+
+<p>（这里第二种情况注意，因为是左递归，所以看得就是第一个字符，一定要跟这个类型一样的A-&gt;B…. 以及B-&gt;A…. 这种才是左递归，如果A-&gt;B…. ,B-&gt;aA…,  这种就不是左递归了，因为样式不同，请注意）</p>
+<p>同样消除左递归的方法：</p>
+<p>如果是间接左递归，则先转换成直接左递归：</p>
+<p>例子：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A-&gt;Bb | <span class="type">c</span></span><br><span class="line">B-&gt;Aa</span><br></pre></td></tr></table></figure>
+
+<p>将B-&gt;Aa代入到另一个式子：</p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A-&gt;Aab | <span class="type">c</span></span><br></pre></td></tr></table></figure>
+
+<p>转换</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A-&gt;cM</span><br><span class="line">M-&gt;abM</span><br><span class="line">M-&gt;ε</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/09/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" rel="next" title="软件项目管理">
+                <i class="fa fa-chevron-left"></i> 软件项目管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/logo.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">文法和语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91"><span class="nav-number">1.1.</span> <span class="nav-text">语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E6%8E%A8%E5%AF%BC-%E6%9C%80%E5%8F%B3%E6%8E%A8%E5%AF%BC-%E8%A7%84%E8%8C%83%E5%8F%A5%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">最左推导&#x2F;最右推导&#x2F;规范句型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="nav-number">1.1.2.</span> <span class="nav-text">二义性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">自上而下的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8B%E8%80%8C%E4%B8%8A%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.4.</span> <span class="nav-text">自下而上的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%AD%E8%AF%AD%E3%80%81%E7%9B%B4%E6%8E%A5%E7%9F%AD%E8%AF%AD%E3%80%81%E5%8F%A5%E6%9F%84"><span class="nav-number">1.1.5.</span> <span class="nav-text">短语、直接短语、句柄</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">词法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NFA%E2%86%92-DFA%E7%9A%84%E8%BD%AC%E6%8D%A2%EF%BC%88NFA%E7%9A%84%E7%A1%AE%E5%AE%9A%E5%8C%96%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">NFA→ DFA的转换（NFA的确定化）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%8C%96%E7%9A%84%E6%9C%89%E5%85%B3%E8%BF%90%E7%AE%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">确定化的有关运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E9%9B%86%E5%8C%96%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">子集化的具体过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DFA%E7%9A%84%E5%8C%96%E7%AE%80"><span class="nav-number">2.2.</span> <span class="nav-text">DFA的化简</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E8%A7%84%E5%BC%8F%E2%86%92NFA"><span class="nav-number">2.3.</span> <span class="nav-text">正规式→NFA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">自顶向下语法分析方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E7%AC%A6%E5%8F%B7FIRST%E9%9B%86%E5%90%88"><span class="nav-number">3.1.</span> <span class="nav-text">开始符号FIRST集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%B7%9F%E7%AC%A6%E5%8F%B7FOLLOW%E9%9B%86%E5%90%88"><span class="nav-number">3.2.</span> <span class="nav-text">后跟符号FOLLOW集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Select%E9%9B%86%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">Select集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E5%88%A4%E5%88%AB"><span class="nav-number">3.4.</span> <span class="nav-text">LL(1) 文法的判别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E5%AE%9A%E4%B9%89"><span class="nav-number">3.4.1.</span> <span class="nav-text">满足定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%90%E4%BA%9B%E9%9D%9ELL-1-%E6%96%87%E6%B3%95%E5%88%B0LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E7%AD%89%E4%BB%B7%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">某些非LL(1)文法到LL(1)文法的等价转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E5%85%AC%E5%9B%A0%E5%AD%90"><span class="nav-number">3.5.1.</span> <span class="nav-text">存在左公因子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E9%80%92%E5%BD%92"><span class="nav-number">3.5.2.</span> <span class="nav-text">存在左递归</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leonlist</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
