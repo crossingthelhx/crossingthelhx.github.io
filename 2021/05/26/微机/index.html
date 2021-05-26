@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="微机原理与汇编语言教材《微型计算机原理与接口技术》 内容主要以8086为主要对象，包括微型计算机的基础知识、8086CPU、寻址方式、指令系统、汇编语言程序设计和存储器。 微型计算机的基础知识和发展状况 进制转换、原码、反码、补码 冯·诺依曼计算机结构 微型计算机基本结构  微处理器的结构和工作模式8086 CPU基本结构8086 CPU内部寄存器 数据寄存器  AX 累加器 BX 基地址指针，存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微机">
+<meta property="og:url" content="http://example.com/2021/05/26/%E5%BE%AE%E6%9C%BA/index.html">
+<meta property="og:site_name" content="Leonlist&#39;s Temporary Blog">
+<meta property="og:description" content="微机原理与汇编语言教材《微型计算机原理与接口技术》 内容主要以8086为主要对象，包括微型计算机的基础知识、8086CPU、寻址方式、指令系统、汇编语言程序设计和存储器。 微型计算机的基础知识和发展状况 进制转换、原码、反码、补码 冯·诺依曼计算机结构 微型计算机基本结构  微处理器的结构和工作模式8086 CPU基本结构8086 CPU内部寄存器 数据寄存器  AX 累加器 BX 基地址指针，存">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-26T03:17:15.000Z">
+<meta property="article:modified_time" content="2021-05-26T03:18:02.026Z">
+<meta property="article:author" content="Leonlist">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/05/26/微机/"/>
+
+
+
+
+
+  <title>微机 | Leonlist's Temporary Blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leonlist's Temporary Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">临时博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/26/%E5%BE%AE%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leonlist's Temporary Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">微机</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-05-26T11:17:15+08:00">
+                2021-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="微机原理与汇编语言"><a href="#微机原理与汇编语言" class="headerlink" title="微机原理与汇编语言"></a>微机原理与汇编语言</h1><p>教材《微型计算机原理与接口技术》</p>
+<p>内容主要以8086为主要对象，包括微型计算机的基础知识、8086CPU、寻址方式、指令系统、汇编语言程序设计和存储器。</p>
+<h2 id="微型计算机的基础知识和发展状况"><a href="#微型计算机的基础知识和发展状况" class="headerlink" title="微型计算机的基础知识和发展状况"></a>微型计算机的基础知识和发展状况</h2><ul>
+<li>进制转换、原码、反码、补码</li>
+<li>冯·诺依曼计算机结构</li>
+<li>微型计算机基本结构</li>
+</ul>
+<h2 id="微处理器的结构和工作模式"><a href="#微处理器的结构和工作模式" class="headerlink" title="微处理器的结构和工作模式"></a>微处理器的结构和工作模式</h2><h3 id="8086-CPU基本结构"><a href="#8086-CPU基本结构" class="headerlink" title="8086 CPU基本结构"></a>8086 CPU基本结构</h3><h3 id="8086-CPU内部寄存器"><a href="#8086-CPU内部寄存器" class="headerlink" title="8086 CPU内部寄存器"></a>8086 CPU内部寄存器</h3><ul>
+<li><p>数据寄存器</p>
+<ul>
+<li>AX 累加器</li>
+<li>BX 基地址指针，存放偏移地址</li>
+<li>CX 计数寄存器</li>
+<li>DX 数据寄存器</li>
+</ul>
+</li>
+<li><p>地址指针和变址寄存器</p>
+<ul>
+<li>SP 堆栈指针</li>
+<li>BP 基址指针</li>
+<li>SI 源变址寄存器</li>
+<li>DI 目的变址寄存器</li>
+<li>BX 基址寄存器</li>
+</ul>
+</li>
+<li><p>段寄存器</p>
+<ul>
+<li>CS 代码段寄存器</li>
+<li>DS 数据段寄存器</li>
+<li>SS 堆栈段寄存器</li>
+<li>ES 附加段寄存器</li>
+</ul>
+</li>
+<li><p>指令指针 IP</p>
+</li>
+<li><p>标志寄存器 FLAGS</p>
+<ul>
+<li>CF 进位标志</li>
+<li>PF 奇偶校验标志</li>
+<li>AF 辅助进位标志</li>
+<li>ZF 零标志</li>
+<li>SF 符号标志</li>
+<li>OF 溢出标志</li>
+<li>TF 陷阱标志</li>
+<li>IF 中断标志</li>
+<li>DF 方向标志</li>
+</ul>
+</li>
+<li><p>8086 CPU的引脚功能</p>
+<ul>
+<li>AD15~AD0，地址/数据总线，双向、三态、分时复用信号</li>
+<li>A19/S6~A16/S3，地址/状态线</li>
+<li>RD 读控制信号</li>
+<li>WR 写控制信号</li>
+<li></li>
+</ul>
+</li>
+<li><p>8086 CPU的存储器组织</p>
+</li>
+<li><p>最小模式系统</p>
+</li>
+<li><p>总线操作时序</p>
+</li>
+</ul>
+<h2 id="8086-的寻址方式和指令系统"><a href="#8086-的寻址方式和指令系统" class="headerlink" title="8086 的寻址方式和指令系统"></a>8086 的寻址方式和指令系统</h2><h3 id="8086-的寻址方式"><a href="#8086-的寻址方式" class="headerlink" title="8086 的寻址方式"></a>8086 的寻址方式</h3><ul>
+<li><p><strong>立即寻址方式</strong></p>
+<p>立即数作为源操作数</p>
+</li>
+<li><p><strong>寄存器寻址方式</strong></p>
+<p>操作数包含在寄存器中，由指令指定寄存器的名称</p>
+<p>注意：源操作数的长度必须与目的操作数一致，比如不能把AH的内容传送到CX中</p>
+</li>
+<li><p>存储器寻址方式</p>
+<ul>
+<li><p><strong>直接寻址方式</strong></p>
+<p>物理地址=16*DS+EA，默认为DS为基地址，EA上必须加方括号，与立即数区分</p>
+<p>（段超越前缀）ES:[500H]，以ES作基地址</p>
+<p>可以用符号地址代替数值地址，实际上就是给存储单元起一个名字</p>
+</li>
+<li><p><strong>寄存器间接寻址方式</strong></p>
+<p>源操作数的寄存器的值为操作数的有效地址，寄存器名称外必须加方括号</p>
+<p>如果指令中指定的寄存器为BX、SI、DI，段地址为数据段DS</p>
+<p>如果为BP，段地址为堆栈段SS</p>
+<p>MOV BX，[SI]</p>
+<p>允许段超越前缀</p>
+</li>
+<li><p><strong>寄存器相对寻址方式</strong></p>
+<p>与寄存器间接寻址类似，就是在有效地址上加一个位移量</p>
+<p>MOV BX, COUNT[SI]，位移量COUNT</p>
+<p>也允许段超越前缀</p>
+<p>MOV DH, ES:ARRAY[SI]</p>
+</li>
+<li><p><strong>基址变址寻址方式</strong></p>
+<p>操作数的有效地址为一个基址寄存器（BX或BP）和一个变址寄存器（SI和DI）的内容之和</p>
+<p>MOV AX, [BX+SI]    物理地址=16*DS+BX+SI</p>
+<p>基址寄存器为BX时，段址寄存器为DS；基址寄存器为BP时，段寄存器为SS</p>
+</li>
+<li><p><strong>相对基址变址寻址方式</strong></p>
+<p>操作数的有效地址为一个基址寄存器（BX或BP）和一个变址寄存器（SI和DI）的内容，再加上指令中指定的8位或16为位移量之和。</p>
+<p>就是在基址变址寻址方式上加上位移量</p>
+</li>
+</ul>
+</li>
+<li><p>其他寻址方式</p>
+<ul>
+<li>隐含寻址</li>
+<li>I/O 端口寻址</li>
+<li>一条指令作几种寻址方式</li>
+<li>转移类指令寻址</li>
+</ul>
+</li>
+</ul>
+<h3 id="机器语言指令编码格式"><a href="#机器语言指令编码格式" class="headerlink" title="机器语言指令编码格式"></a>机器语言指令编码格式</h3><h3 id="8086-指令系统"><a href="#8086-指令系统" class="headerlink" title="8086 指令系统"></a>8086 指令系统</h3><ul>
+<li><p><strong>MOV 传送指令</strong></p>
+<p>IP 寄存器不能用作源操作数或目的操作数</p>
+<p>立即数和CS 寄存器不能用作目的操作数</p>
+<p>MOV 指令不能在两个存储单元之间直接传送数据，也不能在两个段寄存器之间直接传送数据</p>
+</li>
+<li><p><strong>PUSH 进栈指令</strong></p>
+<p>源操作数可以是16位通用寄存器、段寄存器或存储器中的数据字，但不能是立即数</p>
+</li>
+<li><p><strong>POP 出栈指令</strong></p>
+<p>源操作数可以是16位通用寄存器、段寄存器或存储单元，但CS不能用作目的操作数</p>
+</li>
+<li><p><strong>XCHG 交换指令</strong></p>
+<p>XCHG 目的， 源     把源操作数和目的操作数相交换</p>
+<p>交换可以在寄存器之间、寄存器和存储器之间，但段寄存器不能作为操作数，也不能直接交换两个存储单元之间的内容</p>
+</li>
+<li><p><strong>XLAT 表转换指令</strong></p>
+</li>
+<li><p><strong>IN 输入指令</strong></p>
+</li>
+<li><p><strong>LEA 取有效地址指令</strong></p>
+<p>LEA 目的， 源</p>
+<p>取源操作数地址的偏移量，并把它传送目的操作数所在单位</p>
+<p>源操作数必须是存储单元，而且目的操作数必须是一个除段寄存器之外的16位寄存器</p>
+</li>
+<li><p><strong>LDS将双字指针送到寄存器和DS指令</strong></p>
+<p>LDS 目的， 源</p>
+<p>从源操作数指定的存储单元中，取出一个变量的4字节地址指针，送进一对目的寄存器</p>
+<p>指令中源操作数必须是存储单元，从该存储单元开始的连续4个字节单元 中，存放着一个变量的地址指针。目的操作数必须是16位寄存器，通常使用SI寄存器，但是不能使用段寄存器</p>
+</li>
+<li><p><strong>LES将双字指针送到寄存器和ES指令</strong></p>
+<p>LES 目的， 源</p>
+<p>与LDS指令操作基本相同，不同是将源操作数所指向的地址指针中的段地址部分送到ES寄存器中，而不是DS寄存器，目的操作数常用DI寄存器</p>
+</li>
+<li><p><strong>LAHF 标志送到 AH 指令</strong></p>
+<p>把标志寄存器SF、ZF、AF、PF和CF分别传送到AH寄存器位7，6，4，2和0</p>
+</li>
+<li><p><strong>SAHF AH送标志寄存器</strong></p>
+<p>把AH内容存入标志寄存器</p>
+</li>
+<li><p><strong>PUSHF 标志入栈指令</strong></p>
+</li>
+<li><p><strong>POPF 标志出栈指令</strong></p>
+</li>
+<li><p><strong>ADD 加法指令</strong></p>
+</li>
+<li><p><strong>ADC 带进位的加法指令</strong></p>
+<p>在两个操作数相加的同时，还要把进位标志CF 的当前值加进去作为和，再把结果送到目的操作数中</p>
+</li>
+<li><p><strong>INC 增量指令</strong></p>
+<p>INC 目的</p>
+<p>对目的操作数加一</p>
+</li>
+<li><p><strong>AAA 加法的ASCII调整指令</strong></p>
+</li>
+<li><p><strong>DAA 加法的ASCII调整指令</strong></p>
+</li>
+<li><p><strong>SUB 减法指令</strong></p>
+</li>
+<li><p><strong>SBB 带借位的减法指令</strong></p>
+</li>
+<li><p><strong>NEG 取负指令</strong></p>
+</li>
+<li><p><strong>CMP 比较指令</strong></p>
+<p>将目的操作数减去源操作数，但仅将结果反映在标志位上</p>
+</li>
+<li><p><strong>AAS 减法的ASCII调整指令</strong></p>
+</li>
+<li><p><strong>DAS 减法的十进制调整指令</strong></p>
+</li>
+<li><p><strong>MUL 无符号数乘法指令</strong></p>
+</li>
+<li><p><strong>IMUL 整数乘法指令</strong></p>
+</li>
+<li><p><strong>DIV 无符号数除法指令</strong></p>
+</li>
+<li><p><strong>IDIV 整数除法指令</strong></p>
+</li>
+<li><p><strong>CBW 把字节转换为字指令</strong></p>
+<p>将寄存器AL中字节的符号位扩充到AH的所有位</p>
+</li>
+<li><p><strong>CWD 把字转换成双字指令</strong></p>
+<p>把AX中的字的符号位扩充到DX寄存器的所有位中去</p>
+</li>
+<li><p><strong>AAD 除法的ASCII调整指令</strong></p>
+</li>
+<li><p><strong>NOT取反指令</strong></p>
+<p>将目的操作数求反</p>
+<p>目的操作数可以是8位或16位寄存器或存储器，指令执行后，对标志位无影响</p>
+</li>
+<li><p><strong>AND 逻辑与指令</strong></p>
+<p>对两个操作数进行按位逻辑与操作，结果返回目的操作数</p>
+</li>
+<li><p><strong>OR 逻辑或指令</strong></p>
+<p>对两个操作数进行按位逻辑或操作，结果返回目的操作数</p>
+</li>
+<li><p><strong>XOR 异或操作指令</strong></p>
+<p>对两个操作数进行按位逻辑异或运算，结果返回目的操作数</p>
+</li>
+<li><p><strong>TEST 测试指令</strong></p>
+<p>对两个操作数进行按位逻辑与操作，并修改标志位，但不回送结果</p>
+</li>
+<li><p><strong>SAL 算术左移指令</strong></p>
+</li>
+<li><p><strong>SHL 逻辑左移指令</strong></p>
+<p>上面两条指令的功能完全相同，每移动一次，最低有效位LSB补0，最高有效位MSB进入标志位CF</p>
+</li>
+<li><p><strong>SHR 逻辑右移指令</strong></p>
+<p>最高位补0</p>
+</li>
+<li><p><strong>SAR 算数右移指令</strong></p>
+<p>最高位（符号位）保持不变</p>
+</li>
+<li><p><strong>ROL 循环左移指令</strong></p>
+</li>
+<li><p><strong>ROR 循环右移指令</strong></p>
+</li>
+<li><p><strong>RCL 通过进位位循环左移指令</strong></p>
+</li>
+<li><p><strong>RCR 通过进位位循环右移指令</strong></p>
+</li>
+<li><p><strong>MOVS 字符串传送指令</strong></p>
+<p>REP MOVSB 等价于</p>
+<p>MOVS NEW_LOC, SRC_MESS</p>
+<p>​            DEC CX</p>
+<p>​             JNZ AGAIN</p>
+</li>
+<li><p><strong>CMPS 字符串比较指令</strong></p>
+</li>
+<li><p><strong>SCAS 字符串扫描指令</strong></p>
+</li>
+<li><p><strong>LODS 数据串装入指令</strong></p>
+</li>
+<li><p><strong>STOS 数据串存储指令</strong></p>
+<p>将累加器AL或AX中的一个字节或字，传送到附加段中以DI为目标指针的目的串中，同时修改DI，以2指向串中的下一个单元</p>
+</li>
+<li><p><strong>JMP 无条件转移指令</strong></p>
+<p>使程序无条件的转移到指令中的目的地址去执行</p>
+</li>
+<li></li>
+</ul>
+<h1 id="复习题"><a href="#复习题" class="headerlink" title="复习题"></a>复习题</h1><h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><ol>
+<li><p><strong>寻址方式？</strong></p>
+<p>寄存器间接寻址、直接寻址、寄存器相对寻址、基址加变址寻址、基址加变址相对寻址。</p>
+</li>
+<li><p><strong>数据操作数的种类？</strong></p>
+<p>立即数、寄存器数和内存单元数</p>
+</li>
+<li><p><strong>段地址、偏移地址与物理地址之间的关系？有效地址EA又是指什么？</strong></p>
+<p>段地址左移四位加上偏移地址形成20位的物理地址。EA是指段内偏移地址，即表示段内某单元相对于段起始地址的空间位置。</p>
+</li>
+<li><p><strong>能用于寄存器间接寻址及变址寻址的寄存器有哪些？它们通常与哪个段寄存器配合形成物理地址？</strong></p>
+<p>基址寄存器BX和BP，变址寄存器SI和DI</p>
+<p>BX、SI、DI与DS配合形成物理地址，而BP与SS配合形成物理地址。</p>
+</li>
+<li><p><strong>什么是堆栈操作？</strong></p>
+<p>堆栈被定义为一种先进后出的数据结构，即最后进栈的元素将被最先弹出来。堆栈从一个称为栈底的位置开始，数据进入堆栈的操作称为压入（或压栈），数据退出堆栈的操作称为弹出，每进行一次弹出操作，堆栈就减少一个元素，最后一次压入的元素，称为栈顶元素，压入弹出操作都是对栈顶元素进行的堆栈的两种基本的操作。</p>
+</li>
+<li><p><strong>用汇编语言指令实现以下操作</strong></p>
+<p><strong>(1)将寄存器AX、BX和DX的内容相加，和放在寄存器DX中。</strong></p>
+<p><code>ADD AX，BX</code></p>
+<p><code>ADD DX，AX</code></p>
+<p><strong>(2)用基址变址寻址方式（BX和SI）实现AL寄存器的内容和存储器单元BUF中的一个字节相加的操作，和放到AL中。</strong></p>
+<p><code>ADD AL，BYTE PTR [BX][SI]</code></p>
+<p><strong>(3)用寄存器BX实现寄存器相对寻址方式（位移量为100H），将DX的内容和存储单元中的一个字相加，和放到存储单元中。</strong></p>
+<p><code>ADD 100H[BX]，DX</code></p>
+<p><strong>(4)用直接寻址方式（地址为0500H）实现将存储器中的一个字与立即数3ABCH相加，和放回该存储单元中。</strong></p>
+<p><code>ADD [0500H]，3ABCH</code></p>
+<p><strong>(5)用串操作指令实现将内存定义好的两个字节串BUF1和BUF2相加后的和，存放到另一个串BUF3中的功能。</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">……</span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">CX</span>, COUNT</span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">SI</span>, OFFSET BUF1</span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">DI</span>, OFFSET BUF3</span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">BX</span>, OFFSET BUF2</span><br><span class="line"><span class="symbol">AGAIN:</span> <span class="keyword">LODSB</span> <span class="comment">;取[DS]:SI中的字节</span></span><br><span class="line"><span class="keyword">ADD</span> <span class="built_in">AL</span>, [<span class="built_in">BX</span>] <span class="comment">;与[DS]:BX中的字节相加</span></span><br><span class="line"><span class="keyword">STOSB</span>     <span class="comment">;存入[ES]:DI中</span></span><br><span class="line"><span class="keyword">INC</span> <span class="built_in">BX</span></span><br><span class="line"><span class="keyword">DEC</span> <span class="built_in">CX</span></span><br><span class="line"><span class="keyword">JNZ</span> AGAIN</span><br><span class="line">……</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>指出下列指令中，源操作数及目的操作数的寻址方式。</strong></p>
+<p>SUB BX，[BP+35]  ；寄存器寻址、寄存器相对寻址</p>
+<p>MOV AX，2030H  ；寄存器寻址、立即寻址</p>
+<p>SCASB        ；隐含操作数为寄存器寻址和寄存器间接寻址</p>
+<p>IN AL，40H     ；寄存器寻址、立即寻址</p>
+<p>MOV [DI+BX]，AX  ；基址加变址寻址、寄存器寻址</p>
+<p>ADD AX，50H[DI]  ；寄存器寻址、寄存器相对寻址</p>
+<p>MOV AL，[1300H]  ；寄存器寻址、直接寻址</p>
+<p>MUL BL       ；寄存器寻址、目的操作数为隐含寄存器寻址</p>
+</li>
+<li><p><strong>已知（DS）= 1000H，（SI）= 0200H，（BX）= 0100H，（10100H）= 11H，（10101H）= 22H，（10600H）= 33H，（10601H）= 44H，（10300H）= 55H，（10301H）= 66H，（10302H）= 77H，（10303H）= 88H，试分析下列各条指令执行完后AX寄存器的内容。</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，<span class="number">2500H</span>     （<span class="built_in">AX</span>）=<span class="number">2500H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，<span class="number">500H</span>[<span class="built_in">BX</span>]   （<span class="built_in">AX</span>）==<span class="number">4433H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="number">300H</span>]     （<span class="built_in">AX</span>）=<span class="number">6655H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BX</span>]      （<span class="built_in">AX</span>）=<span class="number">2211H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BX</span>][<span class="built_in">SI</span>]    （<span class="built_in">AX</span>）=<span class="number">6655H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BX</span>+<span class="built_in">SI</span>+<span class="number">2</span>]   （<span class="built_in">AX</span>）=<span class="number">8877H</span></span><br></pre></td></tr></table></figure></li>
+<li><p>判断下列指令是否有错，如果有错，说明理由。 </p>
+<table>
+<thead>
+<tr>
+<th>SUB BL，BX</th>
+<th>两个操作数的宽度不一样</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MOV [DI]，[SI]</td>
+<td>两个操作数不能同时为内存数</td>
+</tr>
+<tr>
+<td>MOV AX，BYTE PTR[SI]</td>
+<td>源操作数限定为字节，与目的操作数宽度不一致</td>
+</tr>
+<tr>
+<td>MOV 125，CL</td>
+<td>立即数不能做目的操作数</td>
+</tr>
+<tr>
+<td>MOV CS，BX</td>
+<td>不能对CS实现传送操作</td>
+</tr>
+<tr>
+<td>SHR AX，4</td>
+<td>只有当移位位数为1时，才能用立即数表达</td>
+</tr>
+<tr>
+<td>MOV AH，[SI][DI]</td>
+<td>不能用两个变址寄存器来实现寻址操作</td>
+</tr>
+<tr>
+<td>SHL AX，CH</td>
+<td>移位指令的移位位数用CL给出，不能用CH。</td>
+</tr>
+<tr>
+<td>MOV  BYTE PTR[BX]，3456H</td>
+<td>将16位的立即数传送到一个字节的内存单元</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>设（DS）= 1000H，（ES）= 2000H，（SS）= 3000H，（SI）= 0080H，（BX）= 02D0H，（BP）= 0060H，试指出下列指令的源操作数字段是什么寻址方式？它的物理地址是多少？</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，<span class="number">0CBH</span> 立即寻址</span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="number">100H</span>] 直接寻址，物理地址为：<span class="number">10100H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BX</span>] 寄存器间接寻址，物理地址为：<span class="number">102D0H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BP</span>] 寄存器间接寻址，物理地址为：<span class="number">20060H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BP</span>+<span class="number">50</span>] 寄存器相对寻址，物理地址为：<span class="number">200B0H</span></span><br><span class="line"><span class="keyword">MOV</span> <span class="built_in">AX</span>，[<span class="built_in">BX</span>][<span class="built_in">SI</span>] 基址加变址寻址，物理地址为：<span class="number">10350H</span></span><br></pre></td></tr></table></figure></li>
+<li><p><strong>分别说明下列每组指令中的两条指令的区别.</strong></p>
+<p><strong>（1） AND CL，0FH 按位相“与”，高4位为“0000”，低4位保留原值；</strong></p>
+<p>OR CL，0FH 按位相“或”，高4位为原值，低4位为“1111”。</p>
+<p><strong>（2） MOV AX，BX  将BX寄存器的内容传送到AX寄存器中；</strong></p>
+<p>MOV AX，[BX] 将BX寄存器所指的内存单元的内容送AX寄存器中。</p>
+<p><strong>（3） SUB BX，CX  BX寄存器内容减去CX寄存器的内容，结果送回到BX；</strong></p>
+<p>CMP BX，CX  BX内容减去CX内容，结果只影响标志位。</p>
+<p><strong>（4） AND AL，01H AL内容与01H相“与”，结果为“0000000x”送回AL寄存器；</strong></p>
+<p>TEST AL，01H AL内容与01H相“与”，结果只影响标志位（ZF）。</p>
+<p><strong>（5） JMP NEAR PTR NEXT NEXT所指指令在当前指令的同段内；</strong></p>
+<p>JMP SHORT NEXT NEXT所指指令在当前指令的8位地址范围内。</p>
+<p><strong>（6） ROL AX，CL 循环左移，进位标志位不参与循环；</strong></p>
+<p>RCL AX，CL 循环左移，进位标志位参与循环。</p>
+<p><strong>（7） PUSH AX 将AX内容存入栈顶指针处，即进栈操作；</strong></p>
+<p>POP AX 将栈顶内容弹出装入AX寄存器中，即出栈操作。</p>
+</li>
+<li><p><strong>试分析以下程序段执行完后BX的内容为何？</strong></p>
+<p>MOV BX，1030H</p>
+<p>MOV CL，3</p>
+<p>SHL BX，CL  逻辑左移</p>
+<p>DEC BX  减一</p>
+<p>程序执行完后，<strong>BX=817FH</strong></p>
+</li>
+<li><p><strong>编写能实现以下功能的程序段。</strong></p>
+<p><strong>根据CL中的内容决定程序的走向，设所有的转移都是短程转移。若D0位等于1，其他位为0，转向LAB1；若D1位等于1，其他位为0，转向LAB2；若D2位等于1，其他位为0，转向LAB3；若D0、D1、D2位都是1，则顺序执行。</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">……</span><br><span class="line"><span class="keyword">AND</span> <span class="built_in">CL</span>，<span class="number">07H</span></span><br><span class="line"><span class="keyword">CMP</span> <span class="built_in">CL</span>，<span class="number">01H</span></span><br><span class="line"><span class="keyword">JZ</span> LAB1</span><br><span class="line"><span class="keyword">CMP</span> <span class="built_in">CL</span>，<span class="number">02H</span></span><br><span class="line"><span class="keyword">JZ</span> LAB2</span><br><span class="line"><span class="keyword">CMP</span> <span class="built_in">CL</span>，<span class="number">04H</span></span><br><span class="line"><span class="keyword">JZ</span> LAB3</span><br><span class="line"><span class="keyword">CMP</span> <span class="built_in">CL</span>，<span class="number">07H</span></span><br><span class="line"><span class="keyword">JNZ</span> OVER</span><br><span class="line">……</span><br><span class="line">LAB1： ……</span><br><span class="line">LAB2： ……</span><br><span class="line">LAB3： ……</span><br><span class="line">OVER：……</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>程序段1:</strong></p>
+<p>MOV AX,4455H</p>
+<p>MOV BX,7722H</p>
+<p>PUSH AX</p>
+<p>POP CX</p>
+<p>XCHG BX, CX</p>
+<p>程序执行后 <strong>AX = 4455H, BX = 4455H， CX = 7722H</strong>.</p>
+</li>
+<li><p><strong>程序段2：</strong></p>
+<p>MOV AX, 8765H</p>
+<p>MOV DX,4321H</p>
+<p>MOV CL，04</p>
+<p>SHL DX，CL</p>
+<p>MOV BL，AH</p>
+<p>SHL AX，CL</p>
+<p>SHR BL，CL</p>
+<p>OR DL，BL</p>
+<p>程序执行后 <strong>AX= 7650H,  DX= 3218H</strong> </p>
+</li>
+<li><p><strong>程序段3：</strong></p>
+<p>TABLE    DW 11H，2233H，4455H，6677H，88H</p>
+<p>​       …</p>
+<p>​       MOV BX, OFFSET TABLE</p>
+<p>​       MOV AX, [BX]</p>
+<p>​       MOV DX, [BX+3]</p>
+<p>程序执行后，<strong>AX = 0011H, DX= 5522H</strong></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/05/24/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="next" title="编译原理">
+                <i class="fa fa-chevron-left"></i> 编译原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/logo.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AE%E6%9C%BA%E5%8E%9F%E7%90%86%E4%B8%8E%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">微机原理与汇编语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E5%9E%8B%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%92%8C%E5%8F%91%E5%B1%95%E7%8A%B6%E5%86%B5"><span class="nav-number">1.1.</span> <span class="nav-text">微型计算机的基础知识和发展状况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E5%A4%84%E7%90%86%E5%99%A8%E7%9A%84%E7%BB%93%E6%9E%84%E5%92%8C%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">微处理器的结构和工作模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8086-CPU%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">8086 CPU基本结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8086-CPU%E5%86%85%E9%83%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">8086 CPU内部寄存器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8086-%E7%9A%84%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F%E5%92%8C%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.</span> <span class="nav-text">8086 的寻址方式和指令系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8086-%E7%9A%84%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">8086 的寻址方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%BA%E5%99%A8%E8%AF%AD%E8%A8%80%E6%8C%87%E4%BB%A4%E7%BC%96%E7%A0%81%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.2.</span> <span class="nav-text">机器语言指令编码格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8086-%E6%8C%87%E4%BB%A4%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.3.3.</span> <span class="nav-text">8086 指令系统</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%8D%E4%B9%A0%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">复习题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0"><span class="nav-number">2.1.</span> <span class="nav-text">第三章</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leonlist</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
