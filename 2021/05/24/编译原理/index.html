@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="编译原理," />
 
 
 
@@ -88,9 +88,22 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516181303298.png">
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516193619828.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/9868789-a3c39a974c428700.jpg">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195427323.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195506594.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623200427859.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623200159612.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623203923441.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624141514215.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624172230823.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192105652.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192717151.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192839151.png">
+<meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624091408951.png">
 <meta property="article:published_time" content="2021-05-24T06:38:57.000Z">
-<meta property="article:modified_time" content="2021-05-28T07:22:05.194Z">
+<meta property="article:modified_time" content="2021-06-25T01:15:40.573Z">
 <meta property="article:author" content="Leonlist">
+<meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210516181303298.png">
 
@@ -657,6 +670,682 @@
 <li>预测分析表</li>
 <li>分析过程</li>
 </ul>
+<h1 id="自底向上优先分析"><a href="#自底向上优先分析" class="headerlink" title="自底向上优先分析"></a>自底向上优先分析</h1><h2 id="算符优先文法"><a href="#算符优先文法" class="headerlink" title="算符优先文法"></a>算符优先文法</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>算符优先分析法(Operator Precedence Parse)是仿效四则运算的计算过程而构造的一种语法分析方法。算符优先分析法的关键是比较两个相继出现的终结符的优先级而决定应采取的动作。</p>
+<p>优点：简单，有效，适合表达式的分析。</p>
+<p>缺点：只适合于算符优先文法，是一个不大的文法类。</p>
+<h3 id="算符优先关系的定义"><a href="#算符优先关系的定义" class="headerlink" title="算符优先关系的定义"></a>算符优先关系的定义</h3><p>（算符优先三种关系的符号，中间都有圆点）</p>
+<ul>
+<li>a &lt; b 文法中有形如 A→…aB… 的产生式而 B=&gt;b… 或 B=&gt;Cb…</li>
+<li>a &lt; b 文法中有形如 A→…ab… 或 A=&gt;…aBb… 的产生式</li>
+<li>a &gt; b 文法中有形如 A→…Bb… 的产生式而 B=&gt;…a 或 B=&gt;…aC</li>
+</ul>
+<h3 id="FIRSTVT和LASTVT的构造规则"><a href="#FIRSTVT和LASTVT的构造规则" class="headerlink" title="FIRSTVT和LASTVT的构造规则"></a>FIRSTVT和LASTVT的构造规则</h3><p><strong>FIRSTVT</strong><br>找FIRSTVT的三条规则：如果要找A的FIRSTVT，A的候选式中出现：</p>
+<ul>
+<li>A-&gt;a…，即以终结符开头，该终结符入FIRSTVT</li>
+<li>A-&gt;B…，即以非终结符开头，该非终结符的FIRSTVT入A的FIRSTVT</li>
+<li>A-&gt;Ba…，即先以非终结符开头，紧跟终结符，则终结符入FIRSTVT</li>
+</ul>
+<p><strong>LASTVT</strong><br>找LASTVT的三条规则：如果要找A的LASTVT，A的候选式中出现：</p>
+<ul>
+<li>A-&gt;…a，即以终结符结尾，该终结符入LASTVT</li>
+<li>A-&gt;…B，即以非终结符结尾，该非终结符的LASTVT入A的LASTVT</li>
+<li>A-&gt;…aB，即先以非终结符结尾，前面是终结符，则终结符入FIRSTVT</li>
+</ul>
+<h3 id="构造算法优先关系表"><a href="#构造算法优先关系表" class="headerlink" title="构造算法优先关系表"></a>构造算法优先关系表</h3><ul>
+<li><p>a=b 关系</p>
+<p>可直接查看产生式的右部，对如下形式的产生式</p>
+<p>A-&gt;…ab…</p>
+<p>A-&gt;…aBb…</p>
+<p>则有 a=b 成立</p>
+</li>
+<li><p>a&lt;b 关系</p>
+<p>对于所给表达式文法中终结符 a 在前，非终结符 B 在后的所有相邻符号对，有 b 属于FIRSTVT(B)，则 a&lt;b 成立</p>
+<p>a&lt;FIRSTVT()</p>
+</li>
+<li><p>a&gt;b 关系</p>
+<p>对于所给表达式文法中非终结 B 在前，终结符 a 在后的所有相邻符号对，有 a 属于LASTVT(B)，则 b&gt;a 成立</p>
+<p>LASTVT()&gt;a</p>
+</li>
+</ul>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">已知文法：</span><br><span class="line">S -&gt; a|<span class="type">^|(T</span>)</span><br><span class="line">T -&gt; T,S|<span class="type">S</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>FIRSTVT和LASTVT的构造</strong></p>
+<p>FIRSTVT(S)={a, ^, (}</p>
+<p>FIRSTVT(T)={a, ^, (, 逗号}</p>
+<p>LASTVT(S)={a, ^, (}</p>
+<p>LASTVT(T)={a, ^, (, 逗号}</p>
+<p><strong>构造算法优先关系表</strong></p>
+<ol>
+<li><p>引进产生式 S’ -&gt; #S#</p>
+</li>
+<li><p>找 a=b 关系</p>
+<p>S -&gt; (T) 有  (=)</p>
+<p>S’ -&gt; #E# 有 #=#</p>
+</li>
+<li><p>找 a&lt;b 关系</p>
+<p>S -&gt; (T) 有  ( &lt; FIRSTVT(T)={a, ^, (, 逗号}</p>
+<p>T -&gt; T,S 有 逗号 &lt; FIRSTVT(S)={a, ^, (}</p>
+<p>S’ -&gt; #S# 有 # &lt; FIRSTVT(S)={a, ^, (}</p>
+</li>
+<li><p>找 a&gt;b 关系</p>
+<p>S -&gt; (T) 有 FIRSTVT(T)={a, ^, (, 逗号} &gt; )</p>
+<p>T -&gt; T,S 有 FIRSTVT(S)={a, ^, (} &gt; 逗号</p>
+<p>S’ -&gt; #S# 有 FIRSTVT(S)={a, ^, (} &gt; #</p>
+</li>
+</ol>
+<p>结果如下表</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">a</th>
+<th align="center">^</th>
+<th align="center">(</th>
+<th align="center">)</th>
+<th align="center">,</th>
+<th align="center">#</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">a</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+</tr>
+<tr>
+<td align="center">^</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+</tr>
+<tr>
+<td align="center">(</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">=</td>
+<td align="center">&lt;</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">)</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+</tr>
+<tr>
+<td align="center">,</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">#</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">=</td>
+</tr>
+</tbody></table>
+<p><strong>规约过程</strong></p>
+<p>(a, a)#</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>符号栈</th>
+<th>优先关系</th>
+<th>剩余输入串</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(1)</td>
+<td>#</td>
+<td>&lt;</td>
+<td>(a,a)#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>(2)</td>
+<td>#(</td>
+<td>&lt;</td>
+<td>a,a)#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>(3)</td>
+<td>#(a</td>
+<td>&gt;</td>
+<td>,a)#</td>
+<td>规约(S -&gt; a)</td>
+</tr>
+<tr>
+<td>(4)</td>
+<td>#(S</td>
+<td>&lt;</td>
+<td>,a)#</td>
+<td>移进(忽略S进行比较)</td>
+</tr>
+<tr>
+<td>(5)</td>
+<td>#(S,</td>
+<td>&lt;</td>
+<td>a)#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>(6)</td>
+<td>#(S,a</td>
+<td>&gt;</td>
+<td>)#</td>
+<td>规约(S -&gt; a)</td>
+</tr>
+<tr>
+<td>(7)</td>
+<td>#(S,S</td>
+<td>&gt;</td>
+<td>)#</td>
+<td>规约(T -&gt; T,S)</td>
+</tr>
+<tr>
+<td>(8)</td>
+<td>#(S</td>
+<td>&lt;</td>
+<td>)#</td>
+<td>移进</td>
+</tr>
+<tr>
+<td>(9)</td>
+<td>#(S)</td>
+<td>&gt;</td>
+<td>#</td>
+<td>规约(S -&gt; (T))</td>
+</tr>
+<tr>
+<td>(10)</td>
+<td>#S</td>
+<td>=</td>
+<td>#</td>
+<td>分析成功</td>
+</tr>
+</tbody></table>
+<h3 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h3><ul>
+<li><p><strong>短语</strong></p>
+<p>令文法G，开始符号为S，αβδ是G的句型（即S=&gt;αβδ），如果S=&gt;αAδ且A=&gt;β，则称β是句型αβδ相对于非终结符A的短语。</p>
+<p>（非终结符不断推导，只剩不能推导的符号）</p>
+</li>
+<li><p><strong>直接短语</strong></p>
+<p>如短语中有A=&gt;β，则称β是句型相对于规则A→β的直接短语。</p>
+<p>（非终结符一次推导，只剩不能推导的符号，才能称为直接短语）</p>
+</li>
+<li><p><strong>句柄</strong></p>
+<p>一个句型的最左直接短语称为该句型的句柄。</p>
+</li>
+<li><p><strong>素短语</strong></p>
+<p>文法G某句型的一个短语是素短语，当且仅当它至少含有一个终结符，且除它自身之外不再含更小的素短语。</p>
+</li>
+<li><p><strong>最左素短语</strong></p>
+<p>在具有多个素短语的句型中处于最左边的那个素短语</p>
+</li>
+</ul>
+<p>做法：画语法树</p>
+<h1 id="LR-分析"><a href="#LR-分析" class="headerlink" title="LR 分析"></a>LR 分析</h1><h2 id="LR-0-分析"><a href="#LR-0-分析" class="headerlink" title="LR(0)分析"></a>LR(0)分析</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/9868789-a3c39a974c428700.jpg" alt="img" style="zoom: 50%;" />
+
+<p>LR分析表的结构如上，其分为两个部分Action、Goto</p>
+<p><strong>Action</strong></p>
+<p>两个参数状态i，终结符号a（s(i)代表第i个状态，r(i)代表第i条表达式）</p>
+<ul>
+<li>移入j：j是一个状态，把j压入栈（同时移入a）</li>
+<li>归约A-&gt;B：把栈顶的B归约到A（并根据Goto表项压入新状态）</li>
+<li>接受：接受输入，完成分析</li>
+<li>报错：在输入中发现语法错误</li>
+</ul>
+<p><strong>Goto</strong></p>
+<p>Goto[i,A]=j</p>
+<h3 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h3><ul>
+<li><p>移进项目。原点为终结符的项目，比如 E-&gt;a·bB</p>
+</li>
+<li><p>规约项目。圆点在产生式右部最后的项目，比如 A-&gt;d· </p>
+</li>
+<li><p>待约项目。圆点后为非终结符的项目，比如 E-&gt;b·B </p>
+</li>
+<li><p>接受项目。规约项目为 S’-&gt;S·，表示已分析成功</p>
+</li>
+</ul>
+<p><strong>项目集非法情况：</strong></p>
+<ul>
+<li>移进和规约项目同时存在</li>
+<li>规约和规约项目同时存在</li>
+</ul>
+<p>若不存在上述情况，称文法为 LR(0) 文法</p>
+<h3 id="LR-0-分析表构造"><a href="#LR-0-分析表构造" class="headerlink" title="LR(0)分析表构造"></a>LR(0)分析表构造</h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">若有定义二进制数的方法如下：</span><br><span class="line">E-&gt;aA | <span class="type">bB</span></span><br><span class="line">A-&gt;cA | <span class="type">d</span></span><br><span class="line">B-&gt;cB | <span class="type">d</span></span><br><span class="line">试为该文法构造 LR 分析表</span><br></pre></td></tr></table></figure>
+
+<p>因为本题入口有两个—— E -&gt; aA 和 E -&gt; bB，所以需要构造额外的产生式 S’-&gt;E</p>
+<ol>
+<li><p><strong>扩充</strong></p>
+<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">0</span>) S&#x27;-&gt;E</span><br><span class="line">(<span class="number">1</span>) E-&gt;aA | <span class="type">bB</span></span><br><span class="line">(<span class="number">2</span>) A-&gt;cA | <span class="type">d</span></span><br><span class="line">(<span class="number">3</span>) B-&gt;cB | <span class="type">d</span></span><br><span class="line">//考试时要标好序号</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>项目</strong></p>
+<p>接下来求文法的项目，就是给每个规则加一个点以后然后挪位置，挪一个位置就得到一个项目，如下</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.S<span class="string">&#x27;-&gt;·E    2.S&#x27;</span>-&gt;E·    <span class="number">3</span>.E-&gt;·<span class="function"><span class="title">aA</span>    4.E-&gt;</span><span class="function"><span class="title">a</span>·A    5.E-&gt;</span><span class="function"><span class="title">aA</span>·    6.A-&gt;</span>·cA   </span><br><span class="line"><span class="number">7</span>.A-&gt;<span class="function"><span class="title">c</span>·A    8.A-&gt;</span><span class="function"><span class="title">cA</span>·    9.A-&gt;</span>·<span class="function"><span class="title">d</span>     10.A-&gt;</span><span class="function"><span class="title">d</span>·    11.E-&gt;</span>·<span class="function"><span class="title">bB</span>   12.E-&gt;</span>b·B   </span><br><span class="line"><span class="number">13</span>.E-&gt;<span class="function"><span class="title">bB</span>·   14.B-&gt;</span>·<span class="function"><span class="title">cB</span>   15.B-&gt;</span><span class="function"><span class="title">c</span>·B   16.B-&gt;</span><span class="function"><span class="title">cB</span>·   17.B-&gt;</span>·<span class="function"><span class="title">d</span>    18.B-&gt;</span>d·</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>项目集规范族</strong></p>
+<p>把有 S’ 的项目而且点在最左边的项目作为状态 I0 的核，放在开头。然后看这个点后面的非终结符，是个 E，接下来就去项目中找左部是 E 的而且点在最左边开头位置的项目，列在核的下面，这就是状态 I0</p>
+<ul>
+<li>S’-&gt;·E</li>
+<li>E-&gt;·aA</li>
+<li>E-&gt;·bB</li>
+</ul>
+<p>接下来还是先看核里面点后的这个非终结符E，输入E（你可以理解为在箭弧上标了个E），把点向后移一位，得到 S’-&gt;E·，这其实是得到了一个新的状态的核。当然另外两个也一样，输入点后面的符号，比如输入a得到 E-&gt;a·A 为核的新状态，输入b得到 E-&gt;b·B 为核的新状态。得到新状态的核了，就是看核的点后面的非终结符，找以这个非终结符为左部的点在最左边的项目。如果点后面没有东西就不用找了。</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195427323.png" alt="image-20210623195427323" style="zoom: 67%;" />
+
+<p>接下来就是重复上面的工作，从每一个新状态出发，逐个输入每个项目点后面的符号，就是后移一位，又分别作为新的状态的核然后根据核找下面的同状态里的项目。找到找不动为止。</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195506594.png" alt="image-20210623195506594" style="zoom:67%;" />
+
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623200427859.png" alt="image-20210623200427859" style="zoom:67%;" /></li>
+<li><p><strong>分析表</strong></p>
+<p>先写好 ACTION 和 GOTO 两个列标题，然后在 ACTION 下面写一排文法的所有的终结符，别忘了还有 #，GOTO下面写文法中除了 S’ 以外的所有的非终结符。</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623200159612.png" alt="image-20210623200159612" style="zoom:67%;" />
+
+<ol>
+<li><p>找项目集规范族有 S’-&gt;A· 这种形状的那个状态 Ik，就是第 k 个状态，则把分析表第 k 行的 # 列标上 acc</p>
+<p>（例子中，状态I1里面有 S’-&gt;E·，所以 acc 在第1行）</p>
+</li>
+<li><p>按顺序（一般是按状态序号顺序）分析状态的项目和GOTO函数，<strong>主要就是看每个项目的 · 后面的符号</strong></p>
+<ol>
+<li>如果是终结符，看输入这个终结符后去的哪个状态，比如当前是状态 I0，对于第二个项目 E-&gt;·aA，输入 a 以后去了状态 I2，那就在分析表中第 0 行的 a 列写上 S2，意思就是状态 Ik 输入 Vt 后去了 Ij 状态。</li>
+<li>如果为非终结符，这个更好理解，比如从状态 Ik 输入这个非终结符以后去了状态 Ij ，那就在GOTO表的第 k 行第 Vn 列写 j。</li>
+</ol>
+</li>
+<li><p>有的项目的点是在最后。先看这个项目所在的状态，再看点前面的规则是文法里面的第几个规则，比如说状态 I10 的 A-&gt;d· 里面的 A-&gt;d 就是文法的第 4 条规则，那就在分析表的第 10 行所有的终结符列包括 # 列写上 r4，就是 ACTION 列的一行写满。即状态 Ik 的项目来自于文法的第 j 条规则，则分析表的第 k 行都是 rj。</p>
+</li>
+</ol>
+<p>结果如下：</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623203923441.png" alt="image-20210623203923441" style="zoom:67%;" /></li>
+<li><p><strong>分析过程</strong></p>
+<p>分析bccd</p>
+<p>符号栈中是#，输入符号串就是给定的要分析的串，状态栈因为从0开始，所以状态栈直接填0</p>
+<p>当前输入串bccd#，即将输入b，看状态栈顶是0，看分析表第0行第b列是S3。把角标3压状态栈，b压符号栈，输入串少一个。</p>
+<p>当前为ccd#，即将压c，状态栈顶为3，看分析表第3行第c列是S5，5和c分别压栈。</p>
+<p>当前为cd#，即将压c，状态栈顶为5，看分析表第5行第c列是S5，5和c分别压栈。</p>
+<p>当前为d#，即将压d，状态栈顶为5，看分析表第5行第d列是S11，11和d分别压栈。</p>
+<p>当前为#，即将压#，状态栈顶为11，看分析表第11行第#列是r6。看文法的第6条规则，把符号栈顶归约为B，状态栈顶11弹出。然后再看状态栈顶5和符号栈顶B，GOTO表第5行第B列是9，记得在分析过程这一步的GOTO写9，然后把9压状态栈。这里要分清栈操作的先后顺序。</p>
+<p>当前为#，即将压#，状态栈顶为9，看分析表第9行第#列是r5，看文法的第5条规则，cB 归约成 B ，状态栈顶5和9弹出，然后找GOTO表把新状态9压栈。</p>
+<p>重复上面的操作。</p>
+<p>最后一步，状态栈顶为1，即将压#，分析表第1行第#列为acc，至此分析结束，bccd是该文法的产生式。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>状态栈</th>
+<th>符号栈</th>
+<th>输入串</th>
+<th>ACTION</th>
+<th>GOTO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0</td>
+<td>#</td>
+<td>bccd#</td>
+<td>S3</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>03</td>
+<td>#b</td>
+<td>ccd#</td>
+<td>S5</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>035</td>
+<td>#bc</td>
+<td>cd#</td>
+<td>S5</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>0355(11)</td>
+<td>#bcc</td>
+<td>d#</td>
+<td>S11</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>0355(11)</td>
+<td>#bccd</td>
+<td>#</td>
+<td>r6</td>
+<td>9</td>
+</tr>
+<tr>
+<td>6</td>
+<td>03559</td>
+<td>#bccB</td>
+<td>#</td>
+<td>r5</td>
+<td>9</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0359</td>
+<td>#bcB</td>
+<td>#</td>
+<td>r5</td>
+<td>7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>037</td>
+<td>#bB</td>
+<td>#</td>
+<td>r2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>01</td>
+<td>#E</td>
+<td>#</td>
+<td>acc</td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+</ol>
+<h2 id="SLR-1-分析"><a href="#SLR-1-分析" class="headerlink" title="SLR(1) 分析"></a>SLR(1) 分析</h2><p>SLR分析表的构造步骤</p>
+<ol>
+<li> 拓广文法并对产生式编序号</li>
+<li>构造相应的SLR的识别活前缀的DFA</li>
+<li>求出相关非终结符的Follow集合</li>
+<li>判断是否为SLR文法</li>
+<li>如是，则构造分析表</li>
+</ol>
+<h3 id="分析表构造"><a href="#分析表构造" class="headerlink" title="分析表构造"></a>分析表构造</h3><p>考察算术表达式文法的拓广文法：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">(0)</span> S’ -&gt; E    <span class="comment">(1)</span> E -&gt; E+T    <span class="comment">(2)</span> E -&gt; T   <span class="comment">(3)</span> T -&gt; T*F</span><br><span class="line"><span class="comment">(4)</span> T -&gt; F     <span class="comment">(5)</span> F -&gt; <span class="comment">(E)</span>    <span class="comment">(6)</span> F -&gt; i</span><br></pre></td></tr></table></figure>
+
+<p>前三步同LR文法,，得到如下：</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624141514215.png" alt="image-20210624141514215" style="zoom:67%;" />
+
+<p>红框处存在移进-规约冲突（比如I1中 S’-&gt;E· 是规约项目，E-&gt;E·+T是移进项目）</p>
+<p>首先找出所有点在最后的，即规约项目：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">S’ -&gt; E·  </span><br><span class="line">E -&gt; E+T·   </span><br><span class="line">E -&gt; T·  </span><br><span class="line">T -&gt; T*F·</span><br><span class="line">T -&gt; F·    </span><br><span class="line">F -&gt; (E)·   </span><br><span class="line">F -&gt; i·</span><br></pre></td></tr></table></figure>
+
+<p>求相关follow集（圆点·不算进去）</p>
+<p><strong>follow规则</strong></p>
+<p>将标记 # 放到 FOLLOW(S) 中</p>
+<p>按照下面两个规则<strong>不断迭代</strong>，直到所有的 FOLLOW 集合都不再增长为止</p>
+<ul>
+<li>如果存在产生式 A -&gt; αBβ ，那么 FIRST(β) 中所有非 ε 的符号都在 FOLLOW(B) 中；</li>
+<li>如果存在产生式 A -&gt; αB，或者 A -&gt; αBβ 且 FIRST(β) 包含 ε，那么 FOLLOW(A) 中的所有符号都加入到 FOLLOW(B) 中</li>
+</ul>
+<p>求得：</p>
+<p>FOLLOW(S’)=，所以为 [S -&gt; •BB, #]</p>
+<p>   再找出所有左部是 B 的而且点 • 在最左边开头位置的项目，有 [B -&gt; •aB] 和 [B -&gt; •b]，而 FIRST(Ba)={a,b}，所以为 [B -&gt; •aB, a/b] 和 [B -&gt; •b, a/b]</p>
+<p>   I0为:</p>
+<ul>
+<li>S’ -&gt; •S, #</li>
+<li>S -&gt; •BB, #</li>
+<li>B -&gt; •aB, a/b</li>
+<li>B -&gt; •b, a/b</li>
+</ul>
+<ol start="2">
+<li><p>接下来先看核里面点后的这个非终结符E，输入S（你可以理解为在箭弧上标了个E），把点向后移一位，得到 [S’ -&gt; S·,#]，这其实是得到了一个新的状态的核。当然另外两个也一样，输入点后面的符号，比如输入 a 得到 [B-&gt;a·B, a/b] 为核的新状态，输入b得到 [E-&gt;b· ,a/b] 为核的新状态。得到新状态的核了，继续按照构造闭包函数规则构造，结果如下：</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624172230823.png" alt="image-20210624172230823" style="zoom:67%;" /></li>
+</ol>
+<h3 id="LR-1-分析表的构造"><a href="#LR-1-分析表的构造" class="headerlink" title="LR(1)分析表的构造"></a>LR(1)分析表的构造</h3><p><strong>规则</strong></p>
+<p>假定 C={I0, I1,……, In}，令每个项目集 Ik 的下标 k 为分析器的一个状态。令那个含有项目 [S’→•S, #] 的 Ik 的下标 k 为初态，函数 ACTION 表和 GOTO 表可按如下方法构造：</p>
+<ol>
+<li>若项目 [A→α • aβ, b] 属于 Ik 且 GO(Ik , a)= Ij，a为终结符，则置 ACTION[k, a] 为“把 (j, a) 移进栈”，简记为“Sj”；</li>
+<li>若项目 [A→α •, a] 属于 Ik，那么置 ACTION[k, a] 为“用产生式 A→α 进行归约”，简记为“rj”。这里的j指产生式 A→α 是文法G’的第 j 个产生式；</li>
+<li>若项目 [S’→S •, #] 属于 Ik，则置 ACTION[k, #] 为“接受”，简记为“acc”；</li>
+<li>若 GO(Ik,A) = Ij ，A 为非终结符，则置 GOTO(k , A) = j；</li>
+<li>分析表中凡是不能用规则1到4填入信息的空白格，均置上“报错标志”</li>
+</ol>
+<p><strong>步骤</strong></p>
+<ol>
+<li><p>状态0，接受 a 到达3状态，填 S3；接受 b 到达4状态，填 S4；</p>
+<p>接受 S，B到达1，2状态，在 GOTO 分别填1，2</p>
+</li>
+<li><p>状态1，为 [S’→S •, #] ，# 列填 acc</p>
+</li>
+<li><p>状态2，接受 a 到达6状态，填 S6；接受 b 到达7状态，填 S7；接受 B 到达5状态，在 GOTO 填5</p>
+</li>
+<li><p>状态3，接受 a 到达3状态，填 S3；接受 b 到达4状态，填 S4；接受 B 到达8状态，在 GOTO 填8</p>
+</li>
+<li><p>状态4，使用规则2，用产生式 B -&gt; b 进行规约，a、b 列填 r3</p>
+</li>
+<li><p>状态5，使用规则2，用产生式 S -&gt; BB 进行规约，# 列填 r1</p>
+</li>
+<li><p>按规则填完，结果如图：</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192105652.png" alt="image-20210624192105652" style="zoom:67%;" /></li>
+</ol>
+<h2 id="LALR-1-分析"><a href="#LALR-1-分析" class="headerlink" title="LALR(1)分析"></a>LALR(1)分析</h2><p>基本思想：</p>
+<ul>
+<li>寻找具有相同核心的LR (1) 项集，并将这些项集合并为一个项集。 所谓项集的核心就是其第一分量的集合，即合并同心集</li>
+<li>然后根据合并后得到的项集族构造语法分析表</li>
+</ul>
+<p>首先构造 LR(1)项目集族，若不存在冲突，就把同心集合并</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192717151.png" alt="image-20210624192717151" style="zoom:67%;" />
+
+<p>分析表的方法同 LR(1)</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192839151.png" alt="image-20210624192839151" style="zoom:67%;" />
+
+<h1 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h1><h2 id="后缀式"><a href="#后缀式" class="headerlink" title="后缀式"></a>后缀式</h2><p>波兰表示是一种既不须考虑优先关系、又不用括号的一种表示表达式的方法（前缀式）。<br>逆波兰表示形式，称为后缀式，即运算符在后。</p>
+<p>求法：</p>
+<p>对单目运算符，直接将其放到变量后面，然后按照运算优先顺序，对双目运算符进行转换</p>
+<p>例：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">a</span>+<span class="selector-tag">b</span> -&gt; ab+</span><br><span class="line"><span class="selector-tag">a</span>*(<span class="selector-tag">b</span>+c) -&gt; abc+*</span><br><span class="line">-<span class="selector-tag">a</span>+<span class="selector-tag">b</span>*c -&gt; <span class="selector-tag">a</span><span class="keyword">@bc</span>*+ //单目减运算(即<span class="string">&#x27;-&#x27;</span>负号用@符号代替)</span><br></pre></td></tr></table></figure>
+
+<h2 id="三元式"><a href="#三元式" class="headerlink" title="三元式"></a>三元式</h2><p>三元式由三个部分组成：</p>
+<ul>
+<li>算符：OP</li>
+<li>第一运算分量：ARG1</li>
+<li>第二运算分量：ARG2</li>
+</ul>
+<p>X:=A+B*C 可表示成</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">OP</th>
+<th align="center">ARG1</th>
+<th align="center">ARG2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">(1)</td>
+<td align="center">*</td>
+<td align="center">B</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td align="center">(2)</td>
+<td align="center">+</td>
+<td align="center">A</td>
+<td align="center">(1)</td>
+</tr>
+<tr>
+<td align="center">(3)</td>
+<td align="center">:=</td>
+<td align="center">X</td>
+<td align="center">(2)</td>
+</tr>
+</tbody></table>
+<h2 id="间接三元式"><a href="#间接三元式" class="headerlink" title="间接三元式"></a>间接三元式</h2><p>为便于代码优化处理，常常不直接使用三元式，而是另设一张指示器表（称为间接码表），它将按运算的先后顺序列出的有关三元式在三元表中的位置。即，用一张间接码表辅以三元式表来表示中间代码，这种表示法称为间接三元式。</p>
+<p>例如 语句 X:=(A+B)*C;       Y:=D ↑(A+B)的间接三元式表示</p>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624091408951.png" alt="image-20210624091408951" style="zoom:67%;" />
+
+<p>注意：在间接三元式下，相同的三元式，无需重复填进三元式表中，如上例中的(A+B)。但三元式和四元式需要重复填</p>
+<h2 id="四元式"><a href="#四元式" class="headerlink" title="四元式"></a>四元式</h2><p>四元式由四个部分组成：</p>
+<ul>
+<li>算符：OP</li>
+<li>第一运算分量：ARG1</li>
+<li>第二运算分量：ARG2</li>
+<li>运算结果：RESULT</li>
+</ul>
+<p>ARG1、ARG2、RESULT有时指用户自定义的变量，有时指编译程序引进的临时变量。如果OP是一个算术或逻辑算符，则RESULT总是一个新引进的临时变量，用来存放运算结果</p>
+<p>例：</p>
+<p>A:=-B*(C+D)的四元式表示：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>OP</th>
+<th>ARG1</th>
+<th>ARG2</th>
+<th>RESULT</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(1)</td>
+<td>@</td>
+<td>B</td>
+<td>-</td>
+<td>T1</td>
+<td>T1是临时变量</td>
+</tr>
+<tr>
+<td>(2)</td>
+<td>+</td>
+<td>C</td>
+<td>D</td>
+<td>T2</td>
+<td>T2是临时变量</td>
+</tr>
+<tr>
+<td>(3)</td>
+<td>*</td>
+<td>T1</td>
+<td>T2</td>
+<td>T3</td>
+<td>T3是临时变量</td>
+</tr>
+<tr>
+<td>(4)</td>
+<td>:=</td>
+<td>T3</td>
+<td>-</td>
+<td>A</td>
+<td>赋值运算</td>
+</tr>
+</tbody></table>
+<p>凡只需一个运算量的算符一律规定使用ARG1</p>
+<p>如同三元式一样，四元式出现的顺序与表达式计值的顺序是一样的</p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>写出 $-A*(B+C)-D*(B+C)$ 的后缀式、三元式、间接三元式、四元式</p>
+<p><strong>后缀式：</strong></p>
+<p>$A@BC+<em>DBC+</em>-$</p>
+<p><strong>三元式：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">OP</th>
+<th align="center">ARG1</th>
+<th align="center">ARG2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">(1)</td>
+<td align="center">@</td>
+<td align="center">A</td>
+<td align="center">-</td>
+</tr>
+<tr>
+<td align="center">(2)</td>
+<td align="center">+</td>
+<td align="center">B</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td align="center">(3)</td>
+<td align="center">*</td>
+<td align="center">(1)</td>
+<td align="center">(2)</td>
+</tr>
+<tr>
+<td align="center">(4)</td>
+<td align="center">+</td>
+<td align="center">B</td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td align="center">(5)</td>
+<td align="center">*</td>
+<td align="center">D</td>
+<td align="center">(4)</td>
+</tr>
+<tr>
+<td align="center">(6)</td>
+<td align="center">-</td>
+<td align="center">(3)</td>
+<td align="center">(5)</td>
+</tr>
+</tbody></table>
+<p><strong>间接三元式：</strong></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">三元式表								</span><br><span class="line"><span class="comment">(1)</span> <span class="comment">(@,A,-)</span></span><br><span class="line"><span class="comment">(2)</span> <span class="comment">(+,B,C)</span></span><br><span class="line"><span class="comment">(3)</span> <span class="comment">(*,(1)</span>,<span class="comment">(2)</span>)</span><br><span class="line"><span class="comment">(4)</span> <span class="comment">(*,D,(2)</span>)</span><br><span class="line"><span class="comment">(5)</span> <span class="comment">(-,(3)</span>,<span class="comment">(4)</span>)</span><br><span class="line"></span><br><span class="line">间接码表</span><br><span class="line"><span class="comment">(1)</span></span><br><span class="line"><span class="comment">(2)</span></span><br><span class="line"><span class="comment">(3)</span></span><br><span class="line"><span class="comment">(2)</span></span><br><span class="line"><span class="comment">(4)</span></span><br><span class="line"><span class="comment">(5)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>四元式：</strong></p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name">@</span>,A,-,T1)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T2)</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">*</span></span>,T1,T2,T3)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T4)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">*</span></span>,D,T4,T5)</span><br><span class="line">(<span class="name">5</span>) (<span class="name"><span class="builtin-name">-</span></span>,T3,T5,T6)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>写出 $A+B*(C-D)+E/(C-D)**N$ 的后缀式、三元式、间接三元式、四元式</p>
+<p><strong>后缀式：</strong></p>
+<p>$ACD-B*+CD-N**E/+$</p>
+<p><strong>三元式：</strong></p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">*</span></span>,B,(<span class="name">1</span>))</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">+</span></span>,A,(<span class="name">2</span>))</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">5</span>) (<span class="name">**</span>,(<span class="name">4</span>),N)</span><br><span class="line">(<span class="name">6</span>) (<span class="name"><span class="builtin-name">/</span></span>,E,(<span class="name">5</span>))</span><br><span class="line">(<span class="name">7</span>) (<span class="name"><span class="builtin-name">+</span></span>,(<span class="name">3</span>),(<span class="name">6</span>))</span><br></pre></td></tr></table></figure>
+
+<p><strong>间接三元式：</strong></p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">三元式表</span><br><span class="line">(<span class="number">1</span>) (-,C,D)</span><br><span class="line">(<span class="number">2</span>) (*,B,(<span class="number">1</span>))</span><br><span class="line">(<span class="number">3</span>) (+,A,(<span class="number">2</span>))</span><br><span class="line">(<span class="number">4</span>) (**,(<span class="number">1</span>),N)</span><br><span class="line">(<span class="number">5</span>) (/,E,(<span class="number">4</span>))</span><br><span class="line">(<span class="number">6</span>) (+,(<span class="number">3</span>),(<span class="number">5</span>))</span><br><span class="line"></span><br><span class="line">间接码表</span><br><span class="line">(<span class="number">1</span>)</span><br><span class="line">(<span class="number">2</span>)</span><br><span class="line">(<span class="number">3</span>)</span><br><span class="line">(<span class="number">1</span>)</span><br><span class="line">(<span class="number">4</span>)</span><br><span class="line">(<span class="number">5</span>)</span><br><span class="line">(<span class="number">6</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>四元式</strong>：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D,T1)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">*</span></span>,B,T1,T2)</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">+</span></span>,A,T2,T3)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D,T4)</span><br><span class="line">(<span class="name">5</span>) (<span class="name">**</span>,T4,N,T5)</span><br><span class="line">(<span class="name">6</span>) (<span class="name"><span class="builtin-name">/</span></span>,E,T5,T6)</span><br><span class="line">(<span class="name">7</span>) (<span class="name"><span class="builtin-name">+</span></span>,T3,T6,T7)</span><br></pre></td></tr></table></figure>
+
+<h2 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h2><p>对作为转换条件的布尔式E，可以把它翻译成仅含下述三种形式的四元式序列：</p>
+<ul>
+<li>( jnz, A, - , p): 若 A 为真（1，非0），则转向第 p 个四元式；</li>
+<li>(jθ, A1, A2, p): 若关系 A1 θ A2 为真，则转向四元式 p；</li>
+<li>(j, -, -, p ) : 无条件转向四元式 p。</li>
+</ul>
+<p>写出语句<code>If ﹁A ∨ B&lt;C ∧ D&lt;E  then  X:= Y+Z  else  X:=Y*Z</code> 的四元式序列</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">100 </span>(jnz,A,-,<span class="number">102</span>) </span><br><span class="line"><span class="symbol">101 </span>(j,-,-,<span class="number">106</span>) //如果A为假，跳转<span class="number">106</span></span><br><span class="line"><span class="symbol">102 </span>(j&lt;,B,C,<span class="number">104</span>)</span><br><span class="line"><span class="symbol">103 </span>(j,-,-,<span class="number">109</span>)</span><br><span class="line"><span class="symbol">104 </span>(j&lt;,D,E,<span class="number">106</span>)</span><br><span class="line"><span class="symbol">105 </span>(j,-,-,<span class="number">109</span>)</span><br><span class="line"><span class="symbol">106 </span>(+,Y,Z,T1)</span><br><span class="line"><span class="symbol">107 </span>(:=,T1,-,X)</span><br><span class="line"><span class="symbol">108 </span>(j,-,-,<span class="number">0</span>) //<span class="keyword">if</span>的跳转语句</span><br><span class="line"><span class="symbol">109 </span>(*,Y,Z,T2)</span><br><span class="line"><span class="symbol">110 </span>(:=,T2,-,X)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">写出四元式序列</span><br><span class="line"><span class="keyword">if</span> a&gt;b then </span><br><span class="line">	<span class="keyword">if</span> c&gt;<span class="number">0</span> ∧ d&gt;<span class="number">0</span> then  x:=<span class="number">1</span>  <span class="keyword">else</span> x:=<span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>  x:=<span class="number">3</span> </span><br><span class="line"></span><br><span class="line">答：</span><br><span class="line"><span class="number">100</span> (j&gt;,a,b,<span class="number">102</span>) </span><br><span class="line"><span class="number">101</span> (j,-,-,<span class="number">110</span>) <span class="comment">//如果A为假，跳转106</span></span><br><span class="line"><span class="number">102</span> (j&gt;,C,<span class="number">0</span>,<span class="number">104</span>)</span><br><span class="line"><span class="number">103</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">104</span> (j&gt;,D,<span class="number">0</span>,<span class="number">106</span>)</span><br><span class="line"><span class="number">105</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">106</span> (:=,<span class="number">1</span>,-,X)</span><br><span class="line"><span class="number">107</span> (j,-,-,<span class="number">0</span>) <span class="comment">//内if的跳转语句</span></span><br><span class="line"><span class="number">108</span> (:=,<span class="number">2</span>,-,X) </span><br><span class="line"><span class="number">109</span> (j,-,-,<span class="number">107</span>) <span class="comment">//外if的跳转语句</span></span><br><span class="line"><span class="number">110</span> (:=,<span class="number">3</span>,-,X)</span><br></pre></td></tr></table></figure>
+
+<h1 id="期末考"><a href="#期末考" class="headerlink" title="期末考"></a>期末考</h1><h2 id="自底向上优先分析-1"><a href="#自底向上优先分析-1" class="headerlink" title="自底向上优先分析"></a>自底向上优先分析</h2><ul>
+<li>计算 FIRSTVT 和 LASTVT</li>
+<li>构造算法优先关系表，判断是否为算符优先算法</li>
+<li>给出算符优先分析过程</li>
+<li>指出句型的短语、句柄、素短语和最左素短语</li>
+</ul>
+<h2 id="LR分析"><a href="#LR分析" class="headerlink" title="LR分析"></a>LR分析</h2><ul>
+<li>LR(0)，LR(1)，SLR(1)，LALR(1) 分析表和分析过程（四选一，感觉 LALR(1) 不太会考，LR(0) 也不太会考）</li>
+</ul>
+<h2 id="语义分析-1"><a href="#语义分析-1" class="headerlink" title="语义分析"></a>语义分析</h2><ul>
+<li>后缀式、三元式、间接三元式、四元式</li>
+<li>翻译成四元式序列</li>
+</ul>
 
       
     </div>
@@ -671,6 +1360,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/" rel="tag"># 编译原理</a>
+          
+        </div>
       
 
       
@@ -783,6 +1478,15 @@
             
 
             
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
 
           </nav>
 
@@ -811,7 +1515,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">文法和语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91"><span class="nav-number">1.1.</span> <span class="nav-text">语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E6%8E%A8%E5%AF%BC-%E6%9C%80%E5%8F%B3%E6%8E%A8%E5%AF%BC-%E8%A7%84%E8%8C%83%E5%8F%A5%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">最左推导&#x2F;最右推导&#x2F;规范句型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="nav-number">1.1.2.</span> <span class="nav-text">二义性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">自上而下的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8B%E8%80%8C%E4%B8%8A%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.4.</span> <span class="nav-text">自下而上的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%AD%E8%AF%AD%E3%80%81%E7%9B%B4%E6%8E%A5%E7%9F%AD%E8%AF%AD%E3%80%81%E5%8F%A5%E6%9F%84"><span class="nav-number">1.1.5.</span> <span class="nav-text">短语、直接短语、句柄</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">词法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NFA%E2%86%92-DFA%E7%9A%84%E8%BD%AC%E6%8D%A2%EF%BC%88NFA%E7%9A%84%E7%A1%AE%E5%AE%9A%E5%8C%96%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">NFA→ DFA的转换（NFA的确定化）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%8C%96%E7%9A%84%E6%9C%89%E5%85%B3%E8%BF%90%E7%AE%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">确定化的有关运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E9%9B%86%E5%8C%96%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">子集化的具体过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DFA%E7%9A%84%E5%8C%96%E7%AE%80"><span class="nav-number">2.2.</span> <span class="nav-text">DFA的化简</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E8%A7%84%E5%BC%8F%E2%86%92NFA"><span class="nav-number">2.3.</span> <span class="nav-text">正规式→NFA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">自顶向下语法分析方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E7%AC%A6%E5%8F%B7FIRST%E9%9B%86%E5%90%88"><span class="nav-number">3.1.</span> <span class="nav-text">开始符号FIRST集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%B7%9F%E7%AC%A6%E5%8F%B7FOLLOW%E9%9B%86%E5%90%88"><span class="nav-number">3.2.</span> <span class="nav-text">后跟符号FOLLOW集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Select%E9%9B%86%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">Select集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E5%88%A4%E5%88%AB"><span class="nav-number">3.4.</span> <span class="nav-text">LL(1) 文法的判别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E5%AE%9A%E4%B9%89"><span class="nav-number">3.4.1.</span> <span class="nav-text">满足定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%90%E4%BA%9B%E9%9D%9ELL-1-%E6%96%87%E6%B3%95%E5%88%B0LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E7%AD%89%E4%BB%B7%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">某些非LL(1)文法到LL(1)文法的等价转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E5%85%AC%E5%9B%A0%E5%AD%90"><span class="nav-number">3.5.1.</span> <span class="nav-text">存在左公因子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E9%80%92%E5%BD%92"><span class="nav-number">3.5.2.</span> <span class="nav-text">存在左递归</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.6.</span> <span class="nav-text">递归下降子程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90%E8%A1%A8"><span class="nav-number">3.7.</span> <span class="nav-text">构造预测分析表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E4%B8%AD%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">期中考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E4%B8%8E%E8%AF%AD%E8%A8%80"><span class="nav-number">4.1.</span> <span class="nav-text">文法与语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95-1"><span class="nav-number">4.3.</span> <span class="nav-text">自顶向下语法分析方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E5%92%8C%E8%AF%AD%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">文法和语言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%91"><span class="nav-number">1.1.</span> <span class="nav-text">语法树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%B7%A6%E6%8E%A8%E5%AF%BC-%E6%9C%80%E5%8F%B3%E6%8E%A8%E5%AF%BC-%E8%A7%84%E8%8C%83%E5%8F%A5%E5%9E%8B"><span class="nav-number">1.1.1.</span> <span class="nav-text">最左推导&#x2F;最右推导&#x2F;规范句型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E4%B9%89%E6%80%A7"><span class="nav-number">1.1.2.</span> <span class="nav-text">二义性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">自上而下的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E4%B8%8B%E8%80%8C%E4%B8%8A%E7%9A%84%E5%88%86%E6%9E%90%E6%B3%95"><span class="nav-number">1.1.4.</span> <span class="nav-text">自下而上的分析法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%AD%E8%AF%AD%E3%80%81%E7%9B%B4%E6%8E%A5%E7%9F%AD%E8%AF%AD%E3%80%81%E5%8F%A5%E6%9F%84"><span class="nav-number">1.1.5.</span> <span class="nav-text">短语、直接短语、句柄</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">词法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NFA%E2%86%92-DFA%E7%9A%84%E8%BD%AC%E6%8D%A2%EF%BC%88NFA%E7%9A%84%E7%A1%AE%E5%AE%9A%E5%8C%96%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">NFA→ DFA的转换（NFA的确定化）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9A%E5%8C%96%E7%9A%84%E6%9C%89%E5%85%B3%E8%BF%90%E7%AE%97"><span class="nav-number">2.1.1.</span> <span class="nav-text">确定化的有关运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%90%E9%9B%86%E5%8C%96%E7%9A%84%E5%85%B7%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">2.1.2.</span> <span class="nav-text">子集化的具体过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DFA%E7%9A%84%E5%8C%96%E7%AE%80"><span class="nav-number">2.2.</span> <span class="nav-text">DFA的化简</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E8%A7%84%E5%BC%8F%E2%86%92NFA"><span class="nav-number">2.3.</span> <span class="nav-text">正规式→NFA</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">自顶向下语法分析方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E7%AC%A6%E5%8F%B7FIRST%E9%9B%86%E5%90%88"><span class="nav-number">3.1.</span> <span class="nav-text">开始符号FIRST集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E8%B7%9F%E7%AC%A6%E5%8F%B7FOLLOW%E9%9B%86%E5%90%88"><span class="nav-number">3.2.</span> <span class="nav-text">后跟符号FOLLOW集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Select%E9%9B%86%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">Select集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E5%88%A4%E5%88%AB"><span class="nav-number">3.4.</span> <span class="nav-text">LL(1) 文法的判别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%A1%E8%B6%B3%E5%AE%9A%E4%B9%89"><span class="nav-number">3.4.1.</span> <span class="nav-text">满足定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%90%E4%BA%9B%E9%9D%9ELL-1-%E6%96%87%E6%B3%95%E5%88%B0LL-1-%E6%96%87%E6%B3%95%E7%9A%84%E7%AD%89%E4%BB%B7%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.5.</span> <span class="nav-text">某些非LL(1)文法到LL(1)文法的等价转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E5%85%AC%E5%9B%A0%E5%AD%90"><span class="nav-number">3.5.1.</span> <span class="nav-text">存在左公因子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E5%B7%A6%E9%80%92%E5%BD%92"><span class="nav-number">3.5.2.</span> <span class="nav-text">存在左递归</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E5%AD%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">3.6.</span> <span class="nav-text">递归下降子程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90%E8%A1%A8"><span class="nav-number">3.7.</span> <span class="nav-text">构造预测分析表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E4%B8%AD%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">期中考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%B3%95%E4%B8%8E%E8%AF%AD%E8%A8%80"><span class="nav-number">4.1.</span> <span class="nav-text">文法与语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90-1"><span class="nav-number">4.2.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E9%A1%B6%E5%90%91%E4%B8%8B%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95-1"><span class="nav-number">4.3.</span> <span class="nav-text">自顶向下语法分析方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">自底向上优先分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E6%96%87%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">算符优先文法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">5.1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.2.</span> <span class="nav-text">算符优先关系的定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FIRSTVT%E5%92%8CLASTVT%E7%9A%84%E6%9E%84%E9%80%A0%E8%A7%84%E5%88%99"><span class="nav-number">5.1.3.</span> <span class="nav-text">FIRSTVT和LASTVT的构造规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E7%AE%97%E6%B3%95%E4%BC%98%E5%85%88%E5%85%B3%E7%B3%BB%E8%A1%A8"><span class="nav-number">5.1.4.</span> <span class="nav-text">构造算法优先关系表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90"><span class="nav-number">5.1.5.</span> <span class="nav-text">例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D%E8%A7%A3%E9%87%8A"><span class="nav-number">5.1.6.</span> <span class="nav-text">名词解释</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LR-%E5%88%86%E6%9E%90"><span class="nav-number">6.</span> <span class="nav-text">LR 分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LR-0-%E5%88%86%E6%9E%90"><span class="nav-number">6.1.</span> <span class="nav-text">LR(0)分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84"><span class="nav-number">6.1.1.</span> <span class="nav-text">结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE"><span class="nav-number">6.1.2.</span> <span class="nav-text">项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-0-%E5%88%86%E6%9E%90%E8%A1%A8%E6%9E%84%E9%80%A0"><span class="nav-number">6.1.3.</span> <span class="nav-text">LR(0)分析表构造</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SLR-1-%E5%88%86%E6%9E%90"><span class="nav-number">6.2.</span> <span class="nav-text">SLR(1) 分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E8%A1%A8%E6%9E%84%E9%80%A0"><span class="nav-number">6.2.1.</span> <span class="nav-text">分析表构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LR-1-%E5%88%86%E6%9E%90%E8%A1%A8%E7%9A%84%E6%9E%84%E9%80%A0"><span class="nav-number">6.2.2.</span> <span class="nav-text">LR(1)分析表的构造</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LALR-1-%E5%88%86%E6%9E%90"><span class="nav-number">6.3.</span> <span class="nav-text">LALR(1)分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90"><span class="nav-number">7.</span> <span class="nav-text">语义分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BC%80%E5%BC%8F"><span class="nav-number">7.1.</span> <span class="nav-text">后缀式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E5%85%83%E5%BC%8F"><span class="nav-number">7.2.</span> <span class="nav-text">三元式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%B4%E6%8E%A5%E4%B8%89%E5%85%83%E5%BC%8F"><span class="nav-number">7.3.</span> <span class="nav-text">间接三元式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E5%85%83%E5%BC%8F"><span class="nav-number">7.4.</span> <span class="nav-text">四元式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A0"><span class="nav-number">7.5.</span> <span class="nav-text">练习</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BF%BB%E8%AF%91"><span class="nav-number">7.6.</span> <span class="nav-text">翻译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E6%9C%AB%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">期末考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%BA%95%E5%90%91%E4%B8%8A%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90-1"><span class="nav-number">8.1.</span> <span class="nav-text">自底向上优先分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LR%E5%88%86%E6%9E%90"><span class="nav-number">8.2.</span> <span class="nav-text">LR分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90-1"><span class="nav-number">8.3.</span> <span class="nav-text">语义分析</span></a></li></ol></li></ol></div>
             
 
           </div>
