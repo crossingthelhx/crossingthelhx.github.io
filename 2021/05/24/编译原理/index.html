@@ -101,7 +101,7 @@
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192839151.png">
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624091408951.png">
 <meta property="article:published_time" content="2021-05-24T06:38:57.000Z">
-<meta property="article:modified_time" content="2021-06-25T01:15:40.573Z">
+<meta property="article:modified_time" content="2021-06-25T12:48:12.018Z">
 <meta property="article:author" content="Leonlist">
 <meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
@@ -802,6 +802,10 @@
 </tr>
 </tbody></table>
 <p><strong>规约过程</strong></p>
+<ul>
+<li>因为非终结符不能影响语法分析，所以不需要区分它们，于是在这里用 S 来代替它们</li>
+<li>优先关系比较，是比较栈顶的终结符和下一个输入符之间的优先关系</li>
+</ul>
 <p>(a, a)#</p>
 <table>
 <thead>
@@ -962,7 +966,7 @@
 
 <ol>
 <li><p>找项目集规范族有 S’-&gt;A· 这种形状的那个状态 Ik，就是第 k 个状态，则把分析表第 k 行的 # 列标上 acc</p>
-<p>（例子中，状态I1里面有 S’-&gt;E·，所以 acc 在第1行）</p>
+<p>（例子中，状态 I1 里面有 S’-&gt;E·，所以 acc 在第1行）</p>
 </li>
 <li><p>按顺序（一般是按状态序号顺序）分析状态的项目和GOTO函数，<strong>主要就是看每个项目的 · 后面的符号</strong></p>
 <ol>
@@ -1083,7 +1087,7 @@
 <h3 id="分析表构造"><a href="#分析表构造" class="headerlink" title="分析表构造"></a>分析表构造</h3><p>考察算术表达式文法的拓广文法：</p>
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">(0)</span> S’ -&gt; E    <span class="comment">(1)</span> E -&gt; E+T    <span class="comment">(2)</span> E -&gt; T   <span class="comment">(3)</span> T -&gt; T*F</span><br><span class="line"><span class="comment">(4)</span> T -&gt; F     <span class="comment">(5)</span> F -&gt; <span class="comment">(E)</span>    <span class="comment">(6)</span> F -&gt; i</span><br></pre></td></tr></table></figure>
 
-<p>前三步同LR文法,，得到如下：</p>
+<p>前三步同 LR 文法,，得到如下：</p>
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624141514215.png" alt="image-20210624141514215" style="zoom:67%;" />
 
 <p>红框处存在移进-规约冲突（比如I1中 S’-&gt;E· 是规约项目，E-&gt;E·+T是移进项目）</p>
@@ -1339,13 +1343,16 @@
 <li>给出算符优先分析过程</li>
 <li>指出句型的短语、句柄、素短语和最左素短语</li>
 </ul>
+<p>预计两题</p>
 <h2 id="LR分析"><a href="#LR分析" class="headerlink" title="LR分析"></a>LR分析</h2><ul>
 <li>LR(0)，LR(1)，SLR(1)，LALR(1) 分析表和分析过程（四选一，感觉 LALR(1) 不太会考，LR(0) 也不太会考）</li>
 </ul>
+<p>一题</p>
 <h2 id="语义分析-1"><a href="#语义分析-1" class="headerlink" title="语义分析"></a>语义分析</h2><ul>
 <li>后缀式、三元式、间接三元式、四元式</li>
 <li>翻译成四元式序列</li>
 </ul>
+<p>预计两题</p>
 
       
     </div>
