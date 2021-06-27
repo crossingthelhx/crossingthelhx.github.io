@@ -2350,7 +2350,8 @@
 </li>
 </ul>
 <p>做法：画语法树</p>
-<h1 id="LR-分析"><a href="#LR-分析" class="headerlink" title="LR 分析"></a>LR 分析</h1><h2 id="LR-0-分析"><a href="#LR-0-分析" class="headerlink" title="LR(0)分析"></a>LR(0)分析</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/9868789-a3c39a974c428700.jpg" alt="img" style="zoom: 50%;" />
+<h1 id="LR-分析"><a href="#LR-分析" class="headerlink" title="LR 分析"></a>LR 分析</h1><p>注：由于 # 的转义问题，有些地方用 井 代替</p>
+<h2 id="LR-0-分析"><a href="#LR-0-分析" class="headerlink" title="LR(0)分析"></a>LR(0)分析</h2><h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/9868789-a3c39a974c428700.jpg" alt="img" style="zoom: 50%;" />
 
 <p>LR分析表的结构如上，其分为两个部分Action、Goto</p>
 <p><strong>Action</strong></p>
@@ -2529,7 +2530,7 @@
 <h3 id="分析表构造"><a href="#分析表构造" class="headerlink" title="分析表构造"></a>分析表构造</h3><p>考察算术表达式文法的拓广文法：</p>
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">(0)</span> S’ -&gt; E    <span class="comment">(1)</span> E -&gt; E+T    <span class="comment">(2)</span> E -&gt; T   <span class="comment">(3)</span> T -&gt; T*F</span><br><span class="line"><span class="comment">(4)</span> T -&gt; F     <span class="comment">(5)</span> F -&gt; <span class="comment">(E)</span>    <span class="comment">(6)</span> F -&gt; i</span><br></pre></td></tr></table></figure>
 
-<p>前三步同 LR 文法,，得到如下：</p>
+<p>前三步同 LR(0) 文法,，得到如下：</p>
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624141514215.png" alt="image-20210624141514215" style="zoom:67%;" />
 
 <p>红框处存在移进-规约冲突（比如I1中 S’-&gt;E· 是规约项目，E-&gt;E·+T是移进项目）</p>
@@ -2545,17 +2546,55 @@
 <li>如果存在产生式 A -&gt; αB，或者 A -&gt; αBβ 且 FIRST(β) 包含 ε，那么 FOLLOW(A) 中的所有符号都加入到 FOLLOW(B) 中</li>
 </ul>
 <p>求得：</p>
-<p>FOLLOW(S’)=，所以为 [S -&gt; •BB, #]</p>
-<p>   再找出所有左部是 B 的而且点 • 在最左边开头位置的项目，有 [B -&gt; •aB] 和 [B -&gt; •b]，而 FIRST(Ba)={a,b}，所以为 [B -&gt; •aB, a/b] 和 [B -&gt; •b, a/b]</p>
-<p>   I0为:</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor">FOLLOW(S&#x27;)</span>=&#123;#&#125;</span><br><span class="line"><span class="constructor">FOLLOW(E)</span>=&#123;#, +, )&#125;</span><br><span class="line"><span class="constructor">FOLLOW(T)</span>=<span class="constructor">FOLLOW(F)</span>=&#123;#, +, ), *&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>分析表构造规则</strong></p>
+<ol>
+<li>若项目 A→α • aβ 属于 Ik 且GO(Ik , a)= Ij，a  为终结符，则置 ACTION[k, a] 为“把(j, a)移进栈”，简记为“Sj”；</li>
+<li>若项目 A→α • 属于 Ik，那么对于任何输入符号 a，其中 a∈FOLLOW(A)，置 ACTION[k, a] 为“用产生式A→α进行归约”，简记为“rj”。这里的j指产生式 A→α 是文法 G’ 的第 j 个产生式；</li>
+<li>若项目 S’→S • 属于 Ik，则置 ACTION[k, #] 为“接受”，简记为“acc”；</li>
+</ol>
+<p><strong>步骤</strong></p>
+<ol>
+<li>先填状态0，接受 i 到达5状态，所以填 S5；接受（ 到达4状态，填 S4；</li>
+<li>接受 E、T、F 分别到达1，2，3，在 GOTO 分别填1，2，3</li>
+<li>状态1，接收 + 到达6状态，填 S6</li>
+<li>S’-&gt;E· 为接受项目，在 1 行的 # 列填 acc</li>
+<li>状态2，接受 * 到达7状态，* 列填 S7</li>
+<li>FOLLOW(E)={+,井, )}，与 * 的交集为空，所以2行 +、）、井 列用产生式 E -&gt; T 进行规约，填 r2，* 列移进，填 S7</li>
+<li>状态3，FOLLOW(T)={+,井, )，*}，在3行这些列用产生式 T -&gt; F 进行规约，填 r4</li>
+<li>状态4-8按 SLR 规则填</li>
+<li>状态9，接受 * 到达7状态，* 列填 S7</li>
+<li>FOLLOW(E)={井, +, )}，与 * 的交集为空，所以2行 +、）、井 列用产生式 E -&gt; E+T 进行规约，填 r6，* 列移进，填 S7</li>
+<li>状态10、11填完，最终图如下：</li>
+</ol>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624144904054.png" alt="image-20210624144904054" style="zoom:67%;" />
+
+<p>可以看到，SLR(1) 分析表的构造和 LR(0) 分析表的构造类似，但有两处不同：</p>
 <ul>
-<li>S’ -&gt; •S, #</li>
-<li>S -&gt; •BB, #</li>
+<li>SLR 在含有冲突的项目集中分别进行处理</li>
+<li>只有一个规约项目时，LR不论输入符号，一律规约，而 SLR 只有当输入符号属于 FOLLOW 集合才能规约</li>
+</ul>
+<h2 id="LR-1-分析"><a href="#LR-1-分析" class="headerlink" title="LR(1)分析"></a>LR(1)分析</h2><p>解决 SLR(1) 不能解决的冲突</p>
+<p>例子：</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">0</span>) S’ -&gt; S      (<span class="number">1</span>) S -&gt; BB      (<span class="number">2</span>) B -&gt; aB       (<span class="number">3</span>) B -&gt; b</span><br></pre></td></tr></table></figure>
+
+<h3 id="LR-1-项目集族的构造"><a href="#LR-1-项目集族的构造" class="headerlink" title="LR(1)项目集族的构造"></a>LR(1)项目集族的构造</h3><p><strong>规则</strong></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">构造闭包函数：</span><br><span class="line"></span><br><span class="line">I是一个项目集，closure<span class="comment">(I)</span>为：</span><br><span class="line"><span class="comment">(1)</span> I的任何项目都是属于closure<span class="comment">(I)</span>；</span><br><span class="line"><span class="comment">(2)</span> 若[A→α • Bβ,  a] 属于closure<span class="comment">(I)</span>， B→γ是一个产生式，那么对于FIRST<span class="comment">(βa)</span>中的每个终结符b，项目[B→ • γ,  b]也属于closure<span class="comment">(I)</span>；</span><br><span class="line"><span class="comment">(3)</span> 重复执行步骤<span class="number">2</span>，直到closure<span class="comment">(I)</span>不再增大为止。</span><br><span class="line">注：b可能是从β推导出的第一个符号，或者，若β推导出ε，则b就是a。即b∈FIRST<span class="comment">(βa)</span>。展望符号通过自展来改变，传播不改变。</span><br><span class="line"></span><br><span class="line">构造转换函数与 LR<span class="comment">(0)</span> 类似</span><br><span class="line">令I是一个项目集，X 是一个文法符号，函数 GO<span class="comment">(I,X)</span> 定义为：</span><br><span class="line">GO<span class="comment">(I,X)</span> = closure<span class="comment">(J)</span></span><br><span class="line">其中  J = &#123;任何形如[A→α X• β,  a] 的项目 | [A→α • Xβ, a] ∈I&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>步骤</strong></p>
+<ol>
+<li><p>首先构造 I0。把 [S’ -&gt; •S, 井] 放入，找出所有左部是 S 的而且点 • 在最左边开头位置的项目，有 [S -&gt; •BB]，而 FIRST(井)={井}，所以为 [S -&gt; •BB, 井]</p>
+<p>再找出所有左部是 B 的而且点 • 在最左边开头位置的项目，有 [B -&gt; •aB] 和 [B -&gt; •b]，而 FIRST(Ba)={a,b}，所以为 [B -&gt; •aB, a/b] 和 [B -&gt; •b, a/b]</p>
+<p>I0为:</p>
+<ul>
+<li>S’ -&gt; •S, 井</li>
+<li>S -&gt; •BB, 井</li>
 <li>B -&gt; •aB, a/b</li>
 <li>B -&gt; •b, a/b</li>
 </ul>
-<ol start="2">
-<li><p>接下来先看核里面点后的这个非终结符E，输入S（你可以理解为在箭弧上标了个E），把点向后移一位，得到 [S’ -&gt; S·,#]，这其实是得到了一个新的状态的核。当然另外两个也一样，输入点后面的符号，比如输入 a 得到 [B-&gt;a·B, a/b] 为核的新状态，输入b得到 [E-&gt;b· ,a/b] 为核的新状态。得到新状态的核了，继续按照构造闭包函数规则构造，结果如下：</p>
+</li>
+<li><p>接下来先看核里面点后的这个非终结符E，输入S（你可以理解为在箭弧上标了个 S），把点向后移一位，得到 [S’ -&gt; S·,#]，这其实是得到了一个新的状态的核。当然另外两个也一样，输入点后面的符号，比如输入 a 得到 [B-&gt;a·B, a/b] 为核的新状态，输入b得到 [E-&gt;b· ,a/b] 为核的新状态。得到新状态的核了，继续按照构造闭包函数规则构造，结果如下：</p>
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624172230823.png" alt="image-20210624172230823" style="zoom:67%;" /></li>
 </ol>
 <h3 id="LR-1-分析表的构造"><a href="#LR-1-分析表的构造" class="headerlink" title="LR(1)分析表的构造"></a>LR(1)分析表的构造</h3><p><strong>规则</strong></p>
@@ -2698,9 +2737,10 @@
 </tbody></table>
 <p>凡只需一个运算量的算符一律规定使用ARG1</p>
 <p>如同三元式一样，四元式出现的顺序与表达式计值的顺序是一样的</p>
-<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>写出 $-A*(B+C)-D*(B+C)$ 的后缀式、三元式、间接三元式、四元式</p>
+<h2 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h2><p>写出 <code>-A*(B+C)-D*(B+C)</code>​ 的后缀式、三元式、间接三元式、四元式</p>
 <p><strong>后缀式：</strong></p>
-<p>$A@BC+<em>DBC+</em>-$</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">A</span><span class="keyword">@BC</span>+*DBC+*-</span><br></pre></td></tr></table></figure>
+
 <p><strong>三元式：</strong></p>
 <table>
 <thead>
@@ -2755,9 +2795,10 @@
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name">@</span>,A,-,T1)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T2)</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">*</span></span>,T1,T2,T3)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T4)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">*</span></span>,D,T4,T5)</span><br><span class="line">(<span class="name">5</span>) (<span class="name"><span class="builtin-name">-</span></span>,T3,T5,T6)</span><br></pre></td></tr></table></figure>
 
 <hr>
-<p>写出 A+B*(C-D)+E/(C-D)**N 的后缀式、三元式、间接三元式、四元式</p>
+<p>写出 <code>A+B*(C-D)+E/(C-D)**N</code> 的后缀式、三元式、间接三元式、四元式</p>
 <p><strong>后缀式：</strong></p>
-<p>ABCD-<em>+ECD-N</em>*/+​</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ABCD-<span class="strong">*+ECD-N*</span>*/+</span><br></pre></td></tr></table></figure>
+
 <p><strong>三元式：</strong></p>
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">*</span></span>,B,(<span class="name">1</span>))</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">+</span></span>,A,(<span class="name">2</span>))</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">5</span>) (<span class="name">**</span>,(<span class="name">4</span>),N)</span><br><span class="line">(<span class="name">6</span>) (<span class="name"><span class="builtin-name">/</span></span>,E,(<span class="name">5</span>))</span><br><span class="line">(<span class="name">7</span>) (<span class="name"><span class="builtin-name">+</span></span>,(<span class="name">3</span>),(<span class="name">6</span>))</span><br></pre></td></tr></table></figure>
 
