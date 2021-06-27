@@ -2170,9 +2170,9 @@
 <p>S’ -&gt; #S# 有 # &lt; FIRSTVT(S)={a, ^, (}</p>
 </li>
 <li><p>找 a&gt;b 关系</p>
-<p>S -&gt; (T) 有 FIRSTVT(T)={a, ^, (, 逗号} &gt; )</p>
-<p>T -&gt; T,S 有 FIRSTVT(S)={a, ^, (} &gt; 逗号</p>
-<p>S’ -&gt; #S# 有 FIRSTVT(S)={a, ^, (} &gt; #</p>
+<p>S -&gt; (T) 有 LASTVT(T)={a, ^, (, 逗号} &gt; )</p>
+<p>T -&gt; T,S 有 LASTVT(S)={a, ^, (} &gt; 逗号</p>
+<p>S’ -&gt; #S# 有 LASTVT(S)={a, ^, (} &gt; #</p>
 </li>
 </ol>
 <p>结果如下表</p>
@@ -2420,7 +2420,7 @@
 </li>
 </ol>
 <p>结果如下：</p>
-<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623203923441.png" alt="image-20210623203923441" style="zoom:67%;" /></li>
+<img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210626195108962.png" alt="image-20210626195108962" style="zoom:67%;" /></li>
 <li><p><strong>分析过程</strong></p>
 <p>分析bccd</p>
 <p>符号栈中是#，输入符号串就是给定的要分析的串，状态栈因为从0开始，所以状态栈直接填0</p>
@@ -2469,7 +2469,7 @@
 </tr>
 <tr>
 <td>4</td>
-<td>0355(11)</td>
+<td>0355</td>
 <td>#bcc</td>
 <td>d#</td>
 <td>S11</td>
@@ -2755,9 +2755,9 @@
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name">@</span>,A,-,T1)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T2)</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">*</span></span>,T1,T2,T3)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">+</span></span>,B,C,T4)</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">*</span></span>,D,T4,T5)</span><br><span class="line">(<span class="name">5</span>) (<span class="name"><span class="builtin-name">-</span></span>,T3,T5,T6)</span><br></pre></td></tr></table></figure>
 
 <hr>
-<p>写出 $A+B*(C-D)+E/(C-D)**N$ 的后缀式、三元式、间接三元式、四元式</p>
+<p>写出 A+B*(C-D)+E/(C-D)**N 的后缀式、三元式、间接三元式、四元式</p>
 <p><strong>后缀式：</strong></p>
-<p>$ACD-B*+CD-N**E/+$</p>
+<p>ABCD-<em>+ECD-N</em>*/+​</p>
 <p><strong>三元式：</strong></p>
 <figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">1</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">2</span>) (<span class="name"><span class="builtin-name">*</span></span>,B,(<span class="name">1</span>))</span><br><span class="line">(<span class="name">3</span>) (<span class="name"><span class="builtin-name">+</span></span>,A,(<span class="name">2</span>))</span><br><span class="line">(<span class="name">4</span>) (<span class="name"><span class="builtin-name">-</span></span>,C,D)</span><br><span class="line">(<span class="name">5</span>) (<span class="name">**</span>,(<span class="name">4</span>),N)</span><br><span class="line">(<span class="name">6</span>) (<span class="name"><span class="builtin-name">/</span></span>,E,(<span class="name">5</span>))</span><br><span class="line">(<span class="name">7</span>) (<span class="name"><span class="builtin-name">+</span></span>,(<span class="name">3</span>),(<span class="name">6</span>))</span><br></pre></td></tr></table></figure>
 
@@ -2778,6 +2778,20 @@
 
 <hr>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">写出四元式序列</span><br><span class="line"><span class="keyword">if</span> a&gt;b then </span><br><span class="line">	<span class="keyword">if</span> c&gt;<span class="number">0</span> ∧ d&gt;<span class="number">0</span> then  x:=<span class="number">1</span>  <span class="keyword">else</span> x:=<span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>  x:=<span class="number">3</span> </span><br><span class="line"></span><br><span class="line">答：</span><br><span class="line"><span class="number">100</span> (j&gt;,a,b,<span class="number">102</span>) </span><br><span class="line"><span class="number">101</span> (j,-,-,<span class="number">110</span>) <span class="comment">//如果A为假，跳转106</span></span><br><span class="line"><span class="number">102</span> (j&gt;,C,<span class="number">0</span>,<span class="number">104</span>)</span><br><span class="line"><span class="number">103</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">104</span> (j&gt;,D,<span class="number">0</span>,<span class="number">106</span>)</span><br><span class="line"><span class="number">105</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">106</span> (:=,<span class="number">1</span>,-,X)</span><br><span class="line"><span class="number">107</span> (j,-,-,<span class="number">0</span>) <span class="comment">//内if的跳转语句</span></span><br><span class="line"><span class="number">108</span> (:=,<span class="number">2</span>,-,X) </span><br><span class="line"><span class="number">109</span> (j,-,-,<span class="number">107</span>) <span class="comment">//外if的跳转语句</span></span><br><span class="line"><span class="number">110</span> (:=,<span class="number">3</span>,-,X)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>将下列的IF语句翻译成四元式序列</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">if</span> A <span class="keyword">and</span> <span class="keyword">B</span> <span class="keyword">and</span> (C &gt; D)</span><br><span class="line"><span class="symbol">then</span></span><br><span class="line">	<span class="meta">if</span> A &lt; <span class="keyword">B</span> then F := <span class="number">1</span></span><br><span class="line">	<span class="meta">else</span> F := <span class="number">0</span></span><br><span class="line"><span class="symbol">else</span> G := G + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">100 </span>(jnz,A,-,<span class="number">102</span>) </span><br><span class="line"><span class="symbol">101 </span>(j,-,-,<span class="number">112</span>) </span><br><span class="line"><span class="symbol">102 </span>(jnz,B,-,<span class="number">104</span>)</span><br><span class="line"><span class="symbol">103 </span>(j,-,-,<span class="number">112</span>)</span><br><span class="line"><span class="symbol">104 </span>(j&gt;,C,D,<span class="number">106</span>)</span><br><span class="line"><span class="symbol">105 </span>(j,-,-,<span class="number">112</span>)</span><br><span class="line"><span class="symbol">106 </span>(j&lt;,A,B,<span class="number">108</span>)</span><br><span class="line"><span class="symbol">107 </span>(j,-,-,<span class="number">110</span>) </span><br><span class="line"><span class="symbol">108 </span>(:=,<span class="number">1</span>,-,F) </span><br><span class="line"><span class="symbol">109 </span>(j,-,-,<span class="number">0</span>) //内<span class="keyword">if</span>的跳转语句</span><br><span class="line"><span class="symbol">110 </span>(:=,<span class="number">0</span>,-,F)</span><br><span class="line"><span class="symbol">111 </span>(j,-,-,<span class="number">109</span>) //外<span class="keyword">if</span>的跳转语句</span><br><span class="line"><span class="symbol">112 </span>(+,G,<span class="number">1</span>,T)</span><br><span class="line"><span class="symbol">113 </span>(:=,T,-,G)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p><strong>将下列的FOR语句翻译成四元式序列</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">for</span> i := a + b * <span class="number">2</span> to c + d + <span class="number">10</span> do</span><br><span class="line">	<span class="attribute">if</span> h &gt; g then p := p + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">100 </span>(*,b,<span class="number">2</span>,T1) </span><br><span class="line"><span class="symbol">101 </span>(+,a,T1,T2) </span><br><span class="line"><span class="symbol">102 </span>(+,c,d,T3)</span><br><span class="line"><span class="symbol">103 </span>(+,T3,<span class="number">10</span>,T4)</span><br><span class="line"><span class="symbol">104 </span>(:=,T2,-,i) //i=a+b*<span class="number">2</span></span><br><span class="line"><span class="symbol">105 </span>(:=,T4,-,T) //T=c+d+<span class="number">10</span></span><br><span class="line"><span class="symbol">106 </span>(j,-,-,<span class="number">109</span>)</span><br><span class="line"><span class="symbol">107 </span>(+,i,<span class="number">1</span>,T5)</span><br><span class="line"><span class="symbol">108 </span>(:=,T5,-,i) </span><br><span class="line"><span class="symbol">109 </span>(j&lt;=,i,T,<span class="number">110</span>) //判断i&lt;=T</span><br><span class="line"><span class="symbol">110 </span>(j&gt;=,h,g,<span class="number">112</span>) //判断h&gt;g</span><br><span class="line"><span class="symbol">111 </span>(j,-,-,<span class="number">109</span>)  //<span class="keyword">if</span>的跳转语句</span><br><span class="line"><span class="symbol">112 </span>(+,p,<span class="number">1</span>,T6)</span><br><span class="line"><span class="symbol">113 </span>(:=,T6,-,p)</span><br><span class="line"><span class="symbol">114 </span>(j,-,-,<span class="number">107</span>) //跳转到i++</span><br></pre></td></tr></table></figure>
+
+
 
 <h1 id="期末考"><a href="#期末考" class="headerlink" title="期末考"></a>期末考</h1><h2 id="自底向上优先分析-1"><a href="#自底向上优先分析-1" class="headerlink" title="自底向上优先分析"></a>自底向上优先分析</h2><ul>
 <li>计算 FIRSTVT 和 LASTVT</li>
@@ -2919,7 +2933,7 @@
 <p>更详尽的带图表的分析:</p>
 <p><a href="https://link.zhihu.com/?target=http://vibratingmelon.com/2011/06/10/why-you-should-almost-never-rewrite-code-a-graphical-guide/">Why You Should (Almost) Never Rewrite Code – A Graphical Guide</a></p>
 <hr>
-<p>Avram Joel Spolsky生于1965年，他是一位软件工程师和作家。他是“Joel on Software”博客的作者。他从1991年到1994年间担任Microsoft Excel团队的项目经理。在2000年，他创立了Fog Creek软件并开启了“<a target="_blank" rel="noopener" href="http://www.joelonsoftware.com/index.html">Joel on Software</a>”博客。2008年，他和Jeff Atwood一起启动了如今极为成功的Stack Overflow程序员问答网站。他们用Stack Exchange软件产品作为<a target="_blank" rel="noopener" href="http://stackoverflow.com/">Stack Overflow</a>的引擎。现如今<a target="_blank" rel="noopener" href="http://stackexchange.com/">Stack Exchange</a>网络已经包含了91个站点。</p>
+<p>Avram Joel Spolsky 生于1965年，他是一位软件工程师和作家。他是“Joel on Software”博客的作者。他从1991年到1994年间担任 Microsoft Excel 团队的项目经理。在2000年，他创立了 Fog Creek 软件并开启了“<a target="_blank" rel="noopener" href="http://www.joelonsoftware.com/index.html">Joel on Software</a>”博客。2008年，他和Jeff Atwood一起启动了如今极为成功的 Stack Overflow 程序员问答网站。他们用Stack Exchange软件产品作为<a target="_blank" rel="noopener" href="http://stackoverflow.com/">Stack Overflow</a>的引擎。现如今<a target="_blank" rel="noopener" href="http://stackexchange.com/">Stack Exchange</a>网络已经包含了91个站点。</p>
 <hr>
 <p>他在这篇文章的论点来源于一个简单的事实：<br><strong>It’s harder to read code than to write it.</strong><br><strong>写代码容易，读代码难。</strong></p>
 <p>在开头，他批评网景公司<strong>犯了的最严重的战略错误</strong>——<strong>他们决定从头开始重写代码</strong></p>
@@ -2980,7 +2994,7 @@
 <p>需要有测试员来检测产品的漏洞</p>
 <p><strong>11.新候选人在面试中是否写代码？</strong></p>
 <p>通过写代码了解程序员的能力，而不是看似漂亮的简历和问几个简单的问题（如CreateDialog()和DialogBox()有什么区别？这种问题，查一下帮助文件就知道了）</p>
-<p><strong>12.您是否进行走廊可用性测试(usability testing)？</strong></p>
+<p><strong>12.您是否进行走廊可用性测试(hallway usability testing)？</strong></p>
 <p>也就是随便抓一个人来，进行测试。</p>
 <p>走廊实用性测试对于企业产品测试来讲提供的反馈比招募来做测试得出的结论要好很多，而且很多时候是完全相反的结论。</p>
 <p>但现在很多企业都不做走廊测试了，而改用poll这种电子方式在Social Media发布，让用户选择。原因是走廊测试这种方法的效率不高。</p>
@@ -2996,7 +3010,7 @@
 <li><p><strong>Get Big Fast 综合征</strong>（前期啥也别想，把用户量干上去就行了，不要在乎利润这种东西）</p>
 <p>这种”从构建到翻转”的心态、公司庞大的超员和超支，以及每十分钟提高一次风投的需要，使得软件在10年内无法开发。</p>
 </li>
-<li><p><strong>炒作综合征</strong></p>
+<li><p><strong>炒作综合征</strong>(the Overhype syndrome)</p>
 <p>当你发布软件1.0版本时，需要保持冷静，而不是大肆炒作</p>
 </li>
 <li><p><strong>相信互联网时间</strong>（Internet Time)</p>
@@ -3009,7 +3023,7 @@
 <p>软件需要10年才能编写，但如果你10年不发布，企业就不可能生存下去</p>
 <p>你必须提前发布不完整的版本，使他们相信你的版本1.0是有希望的——但不要夸大其言，因为它们不是那么好，不管你有多聪明。</p>
 </li>
-<li><p><strong>过于频繁的升级</strong></p>
+<li><p><strong>过于频繁的升级</strong>(Too-frequent upgrades)</p>
 <p>用户并不总是需要最新和最好的软件版本</p>
 </li>
 </ol>
@@ -3182,6 +3196,7 @@
 <p><strong>CD - 持续交付</strong></p>
 <p>是一种软件工程方法，团队在短周期内生产软件，确保软件可以在任何时候可靠地发布，并且在发布时软件时手动发布</p>
 <p>它旨在以更高的速度和频率构建、测试和发布软件</p>
+<p>能够每次提交代码时立即构建，并可以将构建部署到生产环境中</p>
 <h2 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h2><p>Pipeline，简而言之，就是一套运行于Jenkins上的工作流框架，将原本独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排与可视化。</p>
 <p>Pipeline是Jenkins2.X的最核心的特性，帮助Jenkins实现从CI到CD与DevOps的转变</p>
 <p>Pipeline是一组插件，让Jenkins可以实现持续交付管道的落地和实施。</p>
