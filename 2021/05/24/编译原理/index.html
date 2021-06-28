@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192839151.png">
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624091408951.png">
 <meta property="article:published_time" content="2021-05-24T06:38:57.000Z">
-<meta property="article:modified_time" content="2021-06-27T05:23:43.986Z">
+<meta property="article:modified_time" content="2021-06-28T02:19:24.754Z">
 <meta property="article:author" content="Leonlist">
 <meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
@@ -713,8 +713,8 @@
 <p><strong>FIRSTVT和LASTVT的构造</strong></p>
 <p>FIRSTVT(S)={a, ^, (}</p>
 <p>FIRSTVT(T)={a, ^, (, 逗号}</p>
-<p>LASTVT(S)={a, ^, (}</p>
-<p>LASTVT(T)={a, ^, (, 逗号}</p>
+<p>LASTVT(S)={a, ^, )}</p>
+<p>LASTVT(T)={a, ^, ), 逗号}</p>
 <p><strong>构造算法优先关系表</strong></p>
 <ol>
 <li><p>引进产生式 S’ -&gt; #S#</p>
@@ -729,9 +729,9 @@
 <p>S’ -&gt; #S# 有 # &lt; FIRSTVT(S)={a, ^, (}</p>
 </li>
 <li><p>找 a&gt;b 关系</p>
-<p>S -&gt; (T) 有 LASTVT(T)={a, ^, (, 逗号} &gt; )</p>
-<p>T -&gt; T,S 有 LASTVT(S)={a, ^, (} &gt; 逗号</p>
-<p>S’ -&gt; #S# 有 LASTVT(S)={a, ^, (} &gt; #</p>
+<p>S -&gt; (T) 有 LASTVT(T)={a, ^, ), 逗号} &gt; )</p>
+<p>T -&gt; T,S 有 LASTVT(T)={a, ^, ), 逗号} &gt; 逗号</p>
+<p>S’ -&gt; #S# 有 LASTVT(S)={a, ^, )} &gt; #</p>
 </li>
 </ol>
 <p>结果如下表</p>
@@ -944,7 +944,7 @@
 <p>因为本题入口有两个—— E -&gt; aA 和 E -&gt; bB，所以需要构造额外的产生式 S’-&gt;E</p>
 <ol>
 <li><p><strong>扩充</strong></p>
-<figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">0</span>) S&#x27;-&gt;E</span><br><span class="line">(<span class="number">1</span>) E-&gt;aA | <span class="type">bB</span></span><br><span class="line">(<span class="number">2</span>) A-&gt;cA | <span class="type">d</span></span><br><span class="line">(<span class="number">3</span>) B-&gt;cB | <span class="type">d</span></span><br><span class="line">//考试时要标好序号</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">0</span>) S&#x27;-&gt;E</span><br><span class="line">(<span class="number">1</span>) E-&gt;aA</span><br><span class="line">(<span class="number">2</span>) E-&gt;bB</span><br><span class="line">(<span class="number">3</span>) A-&gt;cA </span><br><span class="line">(<span class="number">4</span>) A-&gt;d</span><br><span class="line">(<span class="number">5</span>) B-&gt;cB </span><br><span class="line">(<span class="number">6</span>) B-&gt;d</span><br><span class="line"><span class="comment">//考试时要标好序号</span></span><br></pre></td></tr></table></figure></li>
 <li><p><strong>项目</strong></p>
 <p>接下来求文法的项目，就是给每个规则加一个点以后然后挪位置，挪一个位置就得到一个项目，如下</p>
 <figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.S<span class="string">&#x27;-&gt;·E    2.S&#x27;</span>-&gt;E·    <span class="number">3</span>.E-&gt;·<span class="function"><span class="title">aA</span>    4.E-&gt;</span><span class="function"><span class="title">a</span>·A    5.E-&gt;</span><span class="function"><span class="title">aA</span>·    6.A-&gt;</span>·cA   </span><br><span class="line"><span class="number">7</span>.A-&gt;<span class="function"><span class="title">c</span>·A    8.A-&gt;</span><span class="function"><span class="title">cA</span>·    9.A-&gt;</span>·<span class="function"><span class="title">d</span>     10.A-&gt;</span><span class="function"><span class="title">d</span>·    11.E-&gt;</span>·<span class="function"><span class="title">bB</span>   12.E-&gt;</span>b·B   </span><br><span class="line"><span class="number">13</span>.E-&gt;<span class="function"><span class="title">bB</span>·   14.B-&gt;</span>·<span class="function"><span class="title">cB</span>   15.B-&gt;</span><span class="function"><span class="title">c</span>·B   16.B-&gt;</span><span class="function"><span class="title">cB</span>·   17.B-&gt;</span>·<span class="function"><span class="title">d</span>    18.B-&gt;</span>d·</span><br></pre></td></tr></table></figure></li>
@@ -1377,7 +1377,7 @@
 <figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">100 </span>(jnz,A,-,<span class="number">102</span>) </span><br><span class="line"><span class="symbol">101 </span>(j,-,-,<span class="number">106</span>) //如果A为假，跳转<span class="number">106</span></span><br><span class="line"><span class="symbol">102 </span>(j&lt;,B,C,<span class="number">104</span>)</span><br><span class="line"><span class="symbol">103 </span>(j,-,-,<span class="number">109</span>)</span><br><span class="line"><span class="symbol">104 </span>(j&lt;,D,E,<span class="number">106</span>)</span><br><span class="line"><span class="symbol">105 </span>(j,-,-,<span class="number">109</span>)</span><br><span class="line"><span class="symbol">106 </span>(+,Y,Z,T1)</span><br><span class="line"><span class="symbol">107 </span>(:=,T1,-,X)</span><br><span class="line"><span class="symbol">108 </span>(j,-,-,<span class="number">0</span>) //<span class="keyword">if</span>的跳转语句</span><br><span class="line"><span class="symbol">109 </span>(*,Y,Z,T2)</span><br><span class="line"><span class="symbol">110 </span>(:=,T2,-,X)</span><br></pre></td></tr></table></figure>
 
 <hr>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">写出四元式序列</span><br><span class="line"><span class="keyword">if</span> a&gt;b then </span><br><span class="line">	<span class="keyword">if</span> c&gt;<span class="number">0</span> ∧ d&gt;<span class="number">0</span> then  x:=<span class="number">1</span>  <span class="keyword">else</span> x:=<span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>  x:=<span class="number">3</span> </span><br><span class="line"></span><br><span class="line">答：</span><br><span class="line"><span class="number">100</span> (j&gt;,a,b,<span class="number">102</span>) </span><br><span class="line"><span class="number">101</span> (j,-,-,<span class="number">110</span>) <span class="comment">//如果A为假，跳转106</span></span><br><span class="line"><span class="number">102</span> (j&gt;,C,<span class="number">0</span>,<span class="number">104</span>)</span><br><span class="line"><span class="number">103</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">104</span> (j&gt;,D,<span class="number">0</span>,<span class="number">106</span>)</span><br><span class="line"><span class="number">105</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">106</span> (:=,<span class="number">1</span>,-,X)</span><br><span class="line"><span class="number">107</span> (j,-,-,<span class="number">0</span>) <span class="comment">//内if的跳转语句</span></span><br><span class="line"><span class="number">108</span> (:=,<span class="number">2</span>,-,X) </span><br><span class="line"><span class="number">109</span> (j,-,-,<span class="number">107</span>) <span class="comment">//外if的跳转语句</span></span><br><span class="line"><span class="number">110</span> (:=,<span class="number">3</span>,-,X)</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">写出四元式序列</span><br><span class="line"><span class="keyword">if</span> a&gt;b then </span><br><span class="line">	<span class="keyword">if</span> c&gt;<span class="number">0</span> ∧ d&gt;<span class="number">0</span> then  x:=<span class="number">1</span>  <span class="keyword">else</span> x:=<span class="number">2</span></span><br><span class="line"><span class="keyword">else</span>  x:=<span class="number">3</span> </span><br><span class="line"></span><br><span class="line">答：</span><br><span class="line"><span class="number">100</span> (j&gt;,a,b,<span class="number">102</span>) </span><br><span class="line"><span class="number">101</span> (j,-,-,<span class="number">110</span>) </span><br><span class="line"><span class="number">102</span> (j&gt;,C,<span class="number">0</span>,<span class="number">104</span>)</span><br><span class="line"><span class="number">103</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">104</span> (j&gt;,D,<span class="number">0</span>,<span class="number">106</span>)</span><br><span class="line"><span class="number">105</span> (j,-,-,<span class="number">108</span>)</span><br><span class="line"><span class="number">106</span> (:=,<span class="number">1</span>,-,X)</span><br><span class="line"><span class="number">107</span> (j,-,-,<span class="number">0</span>) <span class="comment">//内if的跳转语句</span></span><br><span class="line"><span class="number">108</span> (:=,<span class="number">2</span>,-,X) </span><br><span class="line"><span class="number">109</span> (j,-,-,<span class="number">107</span>) <span class="comment">//外if的跳转语句</span></span><br><span class="line"><span class="number">110</span> (:=,<span class="number">3</span>,-,X)</span><br></pre></td></tr></table></figure>
 
 <hr>
 <p><strong>将下列的IF语句翻译成四元式序列</strong></p>
@@ -1439,8 +1439,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/05/09/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" rel="next" title="软件项目管理">
-                <i class="fa fa-chevron-left"></i> 软件项目管理
+              <a href="/2021/05/09/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
               </a>
             
           </div>
@@ -1545,7 +1545,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
