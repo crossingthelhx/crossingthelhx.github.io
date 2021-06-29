@@ -102,7 +102,7 @@
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624192839151.png">
 <meta property="og:image" content="http://example.com/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210624091408951.png">
 <meta property="article:published_time" content="2021-05-24T06:38:57.000Z">
-<meta property="article:modified_time" content="2021-06-28T02:19:24.754Z">
+<meta property="article:modified_time" content="2021-06-28T13:40:06.556Z">
 <meta property="article:author" content="Leonlist">
 <meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
@@ -806,6 +806,7 @@
 <ul>
 <li>因为非终结符不能影响语法分析，所以不需要区分它们，于是在这里用 S 来代替它们</li>
 <li>优先关系比较，是比较栈顶的终结符和下一个输入符之间的优先关系</li>
+<li>如果栈顶的终结符和下一个输入符之间的优先关系是 &lt; 或 = ，则移进，如果是 &gt; 关系，就调用归约</li>
 </ul>
 <p>(a, a)#</p>
 <table>
@@ -870,9 +871,9 @@
 <tr>
 <td>(8)</td>
 <td>#(S</td>
-<td>&lt;</td>
+<td>=</td>
 <td>)#</td>
-<td>移进</td>
+<td>移进(未分析完成，继续)</td>
 </tr>
 <tr>
 <td>(9)</td>
@@ -1144,10 +1145,10 @@
 <p><strong>步骤</strong></p>
 <ol>
 <li><p>首先构造 I0。把 [S’ -&gt; •S, 井] 放入，找出所有左部是 S 的而且点 • 在最左边开头位置的项目，有 [S -&gt; •BB]，而 FIRST(井)={井}，所以为 [S -&gt; •BB, 井]</p>
-<p>再找出所有左部是 B 的而且点 • 在最左边开头位置的项目，有 [B -&gt; •aB] 和 [B -&gt; •b]，而 FIRST(Ba)={a,b}，所以为 [B -&gt; •aB, a/b] 和 [B -&gt; •b, a/b]</p>
+<p>再找出所有左部是 B 的而且点 • 在最左边开头位置的项目，有 [B -&gt; •aB] 和 [B -&gt; •b]，而 FIRST(B井)={a,b}，所以为 [B -&gt; •aB, a/b] 和 [B -&gt; •b, a/b]</p>
 <p>I0为:</p>
 <ul>
-<li>S’ -&gt; •S, 井</li>
+<li>S’ -&gt; •S , 井</li>
 <li>S -&gt; •BB, 井</li>
 <li>B -&gt; •aB, a/b</li>
 <li>B -&gt; •b, a/b</li>
