@@ -380,8 +380,8 @@
 <li><p>补码：对于有符号数，正数不变，负数除了符号位各位取反后加1</p>
 <p>注意，补码的补码是原码</p>
 <p>-y的补码：对y的补码，所有位全部取反，再加一</p>
-<p>有符号n位补码的真值范围  （-2^n-1— 2^n-1）</p>
-<p>无符号数： 0 </p>
+<p>有符号n位补码的真值范围   -2^(n-1) — 2^(n-1)-1</p>
+<p>无符号数： 0 — 2^n-1</p>
 </li>
 </ol>
 <h3 id="整数补码的加减运算"><a href="#整数补码的加减运算" class="headerlink" title="整数补码的加减运算"></a>整数补码的加减运算</h3><ul>
@@ -401,7 +401,7 @@
 </ul>
 <p>读：输入 外部-&gt;CPU</p>
 <p>写：输出 CPU-&gt;外部</p>
-<p> 读内存：存储器取信息-&gt;CPU</p>
+<p>读内存：存储器取信息-&gt;CPU</p>
 <p>写内存：信息-&gt;存储器</p>
 <h3 id="存储器的基础知识"><a href="#存储器的基础知识" class="headerlink" title="存储器的基础知识"></a>存储器的基础知识</h3><p>1、存储器分类：</p>
 <p>辅助存储器：磁盘、光盘</p>
@@ -411,8 +411,9 @@
 <p>20根地址线，地址范围为：00000H~FFFFFH，1M</p>
 <h2 id="8086微处理器"><a href="#8086微处理器" class="headerlink" title="8086微处理器"></a>8086微处理器</h2><h3 id="常用术语"><a href="#常用术语" class="headerlink" title="常用术语"></a>常用术语</h3><ol>
 <li><p>位和字节：</p>
-<p>位：计算机所能表示的最小的、最基本的数据单位</p>
-<p>字节：由8个位组成</p>
+<p>位bit：计算机所能表示的最小的、最基本的数据单位</p>
+<p>字节byte：由8个位组成</p>
+<p>字word：在8086中，由两个字节组成</p>
 </li>
 <li><p>字长：一次可以直接处理的二进制数码的位数</p>
 <p>与通用寄存器的位数、数据总线的宽度有关</p>
@@ -444,6 +445,7 @@
 <p>BP   base pointer 基址指针</p>
 <p>DI    destination index 目的变址寄存器</p>
 <p>SI source index 源变址寄存器</p>
+<p>IP Instruction Pointer 指令指针（用户不能对 IP 进行存取操作，只能由 BIU 自行修改）</p>
 <p>其中，SP 、BP、 DI、 SI、 IP 都可以为存储单元提供偏移地址</p>
 <p>AH 是 AX 的高8位，而 AL 是 AX 的低8位</p>
 <p>4、<strong>标志寄存器</strong>（又称 程序状态字PSW，16位）</p>
@@ -463,24 +465,6 @@
 <li>DF</li>
 <li>IF</li>
 </ul>
-<h3 id="微型机的硬件结构-1"><a href="#微型机的硬件结构-1" class="headerlink" title="微型机的硬件结构"></a>微型机的硬件结构</h3><p>1、<strong>总线：</strong></p>
-<p>CPU与存储器、I/O端口交换信息的公共通道</p>
-<p>I/O接口：CPU和外部设备交换信息的中转站</p>
-<p>2、<strong>三大总线：</strong></p>
-<p>地址总线AB：单向 访问I/O端口的地址信号</p>
-<p>数据总线DB：双向 读写I/O端口的数据（有读有写当然双向)</p>
-<p>控制总线CB：大部分单向，少数双向  传输CPU发出的控制命令</p>
-<p>3、 </p>
-<p>输入： 外部设备-&gt;CPU</p>
-<p>输出： CPU-&gt;外部设备</p>
-<p>读内存：存储器取信息-&gt;CPU</p>
-<p>写内存：信息-&gt;存储器</p>
-<h3 id="存储器的基础知识-1"><a href="#存储器的基础知识-1" class="headerlink" title="存储器的基础知识"></a>存储器的基础知识</h3><p><strong>存储器分类：</strong></p>
-<p>辅助存储器：磁盘、光盘、闪存和硬盘</p>
-<p>主存储器：RAM、ROM…</p>
-<p>高速缓冲存储器：cache</p>
-<p><strong>存储器的容量由地址线“宽度”（根数）决定</strong></p>
-<p>20根地址线，地址范围为：00000H~FFFFFH，1M</p>
 <h2 id="寻址方式和指令系统"><a href="#寻址方式和指令系统" class="headerlink" title="寻址方式和指令系统"></a>寻址方式和指令系统</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><ol>
 <li><p>指令：单个的CPU操作，通知CPU执行某种操作的“命令”</p>
 <p>指令集：所有指令的集合</p>
@@ -750,7 +734,10 @@
 <p>目的操作数可以是8/16位的寄存器操作数或内存操作数，计数值含义同上，即1或由C指定。</p>
 <p>ROL和ROR为小循环移位指令，没有把CF包含在循环中；RCL和RCR为大循环指令，把CF作为整个循环的一部分参加循环移位。</p>
 <p>CF的值由最后一次被移出的值决定。OF的值只有在移动1次的指令中才有效，移位后符号位发生变换，则OF置1，否则OF置0</p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">设 CF=<span class="number">1</span>，<span class="built_in">AL</span>=<span class="number">1011</span> <span class="number">0100B</span></span><br><span class="line">若执行指令 <span class="keyword">ROL</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">0110</span> <span class="number">1001B</span>，CF=<span class="number">1</span>，OF=<span class="number">1</span>；</span><br><span class="line">若执行指令 <span class="keyword">ROR</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">0101</span> <span class="number">1010B</span>，CF=<span class="number">0</span>，OF=<span class="number">1</span>；</span><br><span class="line">若执行指令 <span class="keyword">RCR</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">1101</span> <span class="number">1010B</span>，CF=<span class="number">0</span>，OF=<span class="number">0</span>；</span><br><span class="line">若执行指令 <span class="keyword">MOV</span>  <span class="built_in">CL</span>，<span class="number">3</span> 和 <span class="keyword">RCL</span>  <span class="built_in">AL</span>，<span class="built_in">CL</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">1010</span> <span class="number">0110B</span>，CF=<span class="number">1</span>，OF不确定。</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">设 CF=<span class="number">1</span>，<span class="built_in">AL</span>=<span class="number">1011</span> <span class="number">0100B</span></span><br><span class="line">若执行指令 <span class="keyword">ROL</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">0110</span> <span class="number">1001B</span>，CF=<span class="number">1</span>，OF=<span class="number">1</span>；</span><br><span class="line">若执行指令 <span class="keyword">ROR</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">0101</span> <span class="number">1010B</span>，CF=<span class="number">0</span>，OF=<span class="number">1</span>；</span><br><span class="line">若执行指令 <span class="keyword">RCR</span>  <span class="built_in">AL</span>，<span class="number">1</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">1101</span> <span class="number">1010B</span>，CF=<span class="number">0</span>，OF=<span class="number">0</span>；</span><br><span class="line">若执行指令 <span class="keyword">MOV</span>  <span class="built_in">CL</span>，<span class="number">3</span> 和 <span class="keyword">RCL</span>  <span class="built_in">AL</span>，<span class="built_in">CL</span></span><br><span class="line">    则 <span class="built_in">AL</span>=<span class="number">1010</span> <span class="number">0110B</span>，CF=<span class="number">1</span>，OF不确定。</span><br></pre></td></tr></table></figure>
+
+<p>注意，在移位操作中，移位次数为多次时，必须将移位次数存放到<strong>CL寄存器</strong>中</p>
+</li>
 </ul>
 <h4 id="字符串处理指令"><a href="#字符串处理指令" class="headerlink" title="字符串处理指令"></a>字符串处理指令</h4><ul>
 <li><p><strong>MOVS 字符串传送指令</strong></p>
@@ -919,7 +906,19 @@
 <li><p>4CH功能返回DOS（返回DOS的操作系统），即程序终止</p>
 </li>
 </ul>
-<h3 id="程序设计"><a href="#程序设计" class="headerlink" title="程序设计"></a>程序设计</h3><h1 id="复习题"><a href="#复习题" class="headerlink" title="复习题"></a>复习题</h1><h2 id="书后习题"><a href="#书后习题" class="headerlink" title="书后习题"></a>书后习题</h2><ol>
+<h3 id="程序设计"><a href="#程序设计" class="headerlink" title="程序设计"></a>程序设计</h3><pre><code>在循环程序中，常用计数器CX寄存器控制循环次数，每经过一次循环操作，计数器自动减1，减到0时，表示循环结束
+        LEA BX,DATA        ;DATA偏移地址送BX
+        MOV CX,14        ;设循环次数
+        MOV AL,[BX]        ;第一个带符号数送AL
+CHECK:  INC BX
+        CMP AL,[BX]        ;两数比较
+        JNZ DONE        ;如果AL中的数较小，则转DONE
+        MOV AL,[BX]
+DONE:    LOOP CHECK        ;循环次数，CX=CX-1，当CX==0，结束循环，执行后续语句
+        MOV MIN,AL        ;存放最小数
+        HLT
+</code></pre>
+<h1 id="复习题"><a href="#复习题" class="headerlink" title="复习题"></a>复习题</h1><h2 id="书后习题"><a href="#书后习题" class="headerlink" title="书后习题"></a>书后习题</h2><ol>
 <li><p><strong>两个带符号数 1011 0100B 和 1100 0111B 相加,运算后各标志位的值等于多少?哪些标志位是有意 义的?如果把这两个数当成无符号数,相加后哪些标志位是有意义的?</strong></p>
 <p>答：</p>
 <p><strong>带符号数：</strong></p>
@@ -998,7 +997,7 @@
 <p>（1）长度不匹配 </p>
 <p>（2）立即数不能做目的操作数</p>
 <p>（3）段寄存器不能用立即数赋值</p>
-<p>（4）不能两个内存</p>
+<p>（4）不能两个内存（目的数和源操作数不能同时为存储单元）</p>
 <p>（5）IP 不能用指令直接修改</p>
 <p>（6）指令中不能出现 IP</p>
 <p>（7）BX/BP 应与 SI/DI 搭配</p>
@@ -1257,16 +1256,18 @@
 <p>（2）检查DX中的第1、6、11位是否同时为1。</p>
 <p>（3）清除AH中最低3位而不改变其它位，将结果存入BH中。</p>
 <p>参考答案：</p>
-<p>（1）XOR AX,F000H</p>
-<p>​          AND AX,F00FH</p>
-<p>​         OR AX,000FH</p>
+<p>（1）XOR AX,F000H    //异或取反</p>
+<p>​          AND AX,F00FH    //其他位清零</p>
+<p>​          OR AX,000FH    //低四位置1</p>
 <p>（2）MOV AX,DX</p>
-<p>​          AND DX,0842H</p>
+<p>​          AND DX,0842H    //(0000 0100 0010 0010 最右端那一位为b0,最高位是b15，第1、6、11位为b1,b6,b11)</p>
 <p>​          XOR DX,0842H      </p>
 <p>​          JZ ZERO</p>
 <p>​          …  </p>
 <p>​         ZERO: …       DX中的第1、6、11位同时为1的情况</p>
-<p>​         …  </p>
+<p>​          …  </p>
+<p>（3）AND DH,0F80H</p>
+<p>​          MOV BH,DH</p>
 </li>
 <li><p><strong>分析下面的程序段完成什么功能？（提示：请将DX与AX中的内容作为一个整体来考虑）</strong></p>
 <p>MOV  CL, 04       （将4存入CL中）  </p>
@@ -1446,7 +1447,7 @@
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SUB1  	PROC  <span class="built_in">FAR</span></span><br><span class="line">        <span class="keyword">PUSH</span>  <span class="built_in">AX</span></span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">AL</span>，BUF1</span><br><span class="line">        <span class="keyword">CMP</span>  <span class="built_in">AL</span>，<span class="number">39H</span></span><br><span class="line">        <span class="keyword">JLE</span>  	NEXT</span><br><span class="line">        <span class="keyword">SUB</span>  <span class="built_in">AL</span>，<span class="number">7H</span></span><br><span class="line">NEXT：	<span class="keyword">AND</span>  <span class="built_in">AL</span>，<span class="number">0FH</span></span><br><span class="line">        <span class="keyword">MOV</span>  BUF2，<span class="built_in">AL</span></span><br><span class="line">        <span class="keyword">POP</span>  <span class="built_in">AX</span></span><br><span class="line">        <span class="keyword">RET</span></span><br><span class="line">SUB1  ENDP</span><br></pre></td></tr></table></figure>
 
 <p>（4）f(x) = 2x^2 +3x–4</p>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SUB1  PROC  <span class="built_in">FAR</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">AX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">BX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">CX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">DX</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">CX</span>，<span class="number">0</span></span><br><span class="line">      <span class="keyword">MOV</span>  <span class="built_in">AL</span>，X//X是变量名</span><br><span class="line">      <span class="keyword">MOV</span>  <span class="built_in">BL</span>，<span class="built_in">AL</span> </span><br><span class="line">      <span class="keyword">MUL</span>  <span class="built_in">BL</span> //X平方</span><br><span class="line">      <span class="keyword">MOV</span>  <span class="built_in">DL</span>，<span class="number">2</span></span><br><span class="line">      <span class="keyword">MUL</span>  <span class="built_in">DL</span> //X平方*<span class="number">2</span></span><br><span class="line">      <span class="keyword">ADD</span>  <span class="built_in">CX</span>，<span class="built_in">AX</span>//加入<span class="built_in">CX</span>中</span><br><span class="line">      <span class="keyword">MOV</span>  <span class="built_in">AL</span>，<span class="built_in">BL</span></span><br><span class="line">      <span class="keyword">MOV</span>  <span class="built_in">DL</span>，<span class="number">3</span> </span><br><span class="line">      <span class="keyword">MUL</span>  <span class="built_in">DL</span>   //<span class="number">3</span>*X</span><br><span class="line">      <span class="keyword">ADD</span>  <span class="built_in">CX</span>，<span class="built_in">AX</span>//加入<span class="built_in">CX</span>中</span><br><span class="line">      <span class="keyword">SUB</span>  <span class="built_in">CX</span>，<span class="number">4</span>    //减去<span class="number">4</span></span><br><span class="line">      <span class="keyword">MOV</span>  FX，<span class="built_in">CX</span> //FX是变量名</span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">DX</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">CX</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">BX</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">AX</span></span><br><span class="line"><span class="keyword">RET</span></span><br><span class="line">SUB1  ENDP（子程序利用存储单元传递参数）</span><br></pre></td></tr></table></figure>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SUB1  PROC  <span class="built_in">FAR</span></span><br><span class="line">    <span class="keyword">PUSH</span>  <span class="built_in">AX</span></span><br><span class="line">    <span class="keyword">PUSH</span>  <span class="built_in">BX</span></span><br><span class="line">    <span class="keyword">PUSH</span>  <span class="built_in">CX</span></span><br><span class="line">    <span class="keyword">PUSH</span>  <span class="built_in">DX</span></span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">CX</span>，<span class="number">0</span></span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">AL</span>，X//X是变量名</span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">BL</span>，<span class="built_in">AL</span> </span><br><span class="line">    <span class="keyword">MUL</span>  <span class="built_in">BL</span> //X平方</span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">DL</span>，<span class="number">2</span></span><br><span class="line">    <span class="keyword">MUL</span>  <span class="built_in">DL</span> //X平方*<span class="number">2</span></span><br><span class="line">    <span class="keyword">ADD</span>  <span class="built_in">CX</span>，<span class="built_in">AX</span>//加入<span class="built_in">CX</span>中</span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">AL</span>，<span class="built_in">BL</span></span><br><span class="line">    <span class="keyword">MOV</span>  <span class="built_in">DL</span>，<span class="number">3</span> </span><br><span class="line">    <span class="keyword">MUL</span>  <span class="built_in">DL</span>   //<span class="number">3</span>*X</span><br><span class="line">    <span class="keyword">ADD</span>  <span class="built_in">CX</span>，<span class="built_in">AX</span>//加入<span class="built_in">CX</span>中</span><br><span class="line">    <span class="keyword">SUB</span>  <span class="built_in">CX</span>，<span class="number">4</span>    //减去<span class="number">4</span></span><br><span class="line">    <span class="keyword">MOV</span>  FX，<span class="built_in">CX</span> //FX是变量名</span><br><span class="line">    <span class="keyword">POP</span>  <span class="built_in">DX</span></span><br><span class="line">    <span class="keyword">POP</span>  <span class="built_in">CX</span></span><br><span class="line">    <span class="keyword">POP</span>  <span class="built_in">BX</span></span><br><span class="line">    <span class="keyword">POP</span>  <span class="built_in">AX</span></span><br><span class="line">	<span class="keyword">RET</span></span><br><span class="line">SUB1  ENDP（子程序利用存储单元传递参数）</span><br></pre></td></tr></table></figure>
 
 <p>（5）非压缩BCD码转换为压缩BCD码</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">BCDTR1  PROC  <span class="built_in">NEAR</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">AX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">BX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">CX</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">SI</span></span><br><span class="line"><span class="keyword">PUSH</span>  <span class="built_in">DI</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">SI</span>，OFFSET BUF1  ；非压缩BCD码</span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">DI</span>，OFFSET BUF2  ；压缩BCD码</span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">AL</span>，[<span class="built_in">SI</span>]</span><br><span class="line"><span class="keyword">AND</span>  <span class="built_in">AL</span>，<span class="number">0FH</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">BL</span>，[<span class="built_in">SI</span>+<span class="number">1</span>]</span><br><span class="line"><span class="keyword">AND</span>  <span class="built_in">BL</span>，<span class="number">0FH</span></span><br><span class="line"><span class="keyword">MOV</span>  <span class="built_in">CL</span>，<span class="number">4</span></span><br><span class="line"><span class="keyword">SHL</span>  <span class="built_in">BL</span>，<span class="built_in">CL</span></span><br><span class="line"><span class="keyword">OR</span>  <span class="built_in">AL</span>，<span class="built_in">BL</span></span><br><span class="line"><span class="keyword">MOV</span>  [<span class="built_in">DI</span>]，<span class="built_in">AL</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">DI</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">SI</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">CX</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">BX</span></span><br><span class="line"><span class="keyword">POP</span>  <span class="built_in">AX</span></span><br><span class="line"><span class="keyword">RET</span></span><br><span class="line">BCDTR1  ENDP</span><br></pre></td></tr></table></figure>
@@ -1552,7 +1553,7 @@
 
 <p>程序运行后，AL的内容为10000000B；BL的内容为11111111B；（利用寄存器传递参数）</p>
 </li>
-<li><p>分析下列程序，指出程序完成什么功能？</p>
+<li><p><strong>分析下列程序，指出程序完成什么功能？</strong></p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">MAIN  PROC  <span class="built_in">FAR</span></span><br><span class="line">       <span class="keyword">MOV</span>  <span class="built_in">SI</span>，OFFSET SOURCE</span><br><span class="line">		<span class="keyword">PUSH</span>  <span class="built_in">SI</span></span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">DI</span>，OFFSET  DEST</span><br><span class="line">        <span class="keyword">PUSH</span>  <span class="built_in">DI</span></span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">CX</span>，<span class="number">100</span></span><br><span class="line">        <span class="keyword">PUSH</span>  <span class="built_in">CX</span></span><br><span class="line">        <span class="keyword">CALL</span>  <span class="built_in">FAR</span> <span class="built_in">PTR</span> REMOV</span><br><span class="line">		<span class="keyword">RET</span></span><br><span class="line">MAIN  ENDP</span><br><span class="line">REMOV  PROC  <span class="built_in">FAR</span></span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">BP</span>，<span class="built_in">SP</span></span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">CX</span>，[<span class="built_in">BP</span>+<span class="number">4</span>]</span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">DI</span>，[<span class="built_in">BP</span>+<span class="number">6</span>]</span><br><span class="line">        <span class="keyword">MOV</span>  <span class="built_in">SI</span>，[<span class="built_in">BP</span>+<span class="number">8</span>]</span><br><span class="line">        <span class="keyword">CLD</span></span><br><span class="line"><span class="keyword">REP</span>     <span class="keyword">MOVSB</span></span><br><span class="line">		<span class="keyword">RET</span> <span class="number">6</span></span><br><span class="line">REMOV  ENDP</span><br></pre></td></tr></table></figure>
 
 <p>MAIN中初始化源串和目的串，并调用子程序REMOV；子程序REMOV实现字节型数据串的传送。（利用堆栈传递参数）</p>
@@ -1624,15 +1625,82 @@
 <p>Windows是微软公司最初在1985年底推出的专用于微型机的操作系统，第一个版本称为Windows 1.0，后来不断更新。随着版本的不断提高，功能不断加强，速度也不断提高。Windows的操作简单，体现在用户界面的高度图形化和选择性上。Windows完全不需要用户自己输入计算机命令，而是像“点菜”一样从给出的命令选单中作出选择，就能得心应手地操纵计算机的运行。Windows的操作简单，也体现在添加新的硬件设备时所提供的即插即用功能。从Windows 95版本开始，微软公司就在Windows设计中容纳了网络驱动程序，并考虑了对网络协议的接纳。由于Windows有良好的兼容性，所以，在系统中既可以运行16位的程序，也可以运行32位的程序。而且，Windows对硬件也实现了良好的兼容，允许在计算机系统中接入当今市场上能与微型机相连的各种外设。</p>
 </li>
 </ol>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>自己搜集和老师上课有提到过的题目</strong></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p><strong>自己搜集的题目</strong></p>
 <ol>
 <li><p>8086CPU 是一个 16位的微处理器，具有 <strong>16</strong> 位数据总线，20 位地址总线，可寻址空间为 <strong>1M</strong> 字节</p>
+</li>
+<li><p>在 PC 机中，只能用 10 根地址线对 I/O 端口寻址，可寻址的端口有 <strong>B</strong> 个</p>
+<p>A.256    B.1K    C.64K    D.1M</p>
 </li>
 <li><p>数制转换</p>
 <p>[124.719]10 = [1111100.10111000]2 = [7C.B8]16 = [235.5014]7 = [00100100100.011100011001]BCD</p>
 </li>
 <li><p>代码转换</p>
 <p>[-104]10=[11101000]原=[10010111]反=[10011000]补</p>
+</li>
+<li><p>16 位二进制补码所能表示的最大数是 <strong>A</strong></p>
+<p>A.32767    B.32768    C.65535    D.65536</p>
+</li>
+<li><p>下面指令序列测试 AL 中的数是否偶数，若为偶数则转移至 NEXT 处，横线处的指令为 <strong>B</strong> </p>
+<p>TEST AL，01H</p>
+<p>__     NEXT</p>
+<p>A.JNZ    B.JE    C.JS    D.JC</p>
+</li>
+<li><p>用来存放下一条要取指令的偏移地址的寄存器是 <strong>A</strong></p>
+<p>A.IP    B.FLAGS    C.BP    D.SP</p>
+</li>
+<li><p>下面指令中会影响状态标志的是 <strong>D</strong> 指令</p>
+<p>A.MOV    B.LEA    C.PUSH    D.CMP</p>
+</li>
+<li><p>寄存器间接寻址时，不可以提供偏移地址的寄存器是 <strong>A</strong></p>
+<p>A.DX    B.BP    C.DI    D.BX</p>
+</li>
+<li><p>8086 系统中，一个堆栈段中最多可以存放 <strong>C</strong> 个字型的数据</p>
+<p>A.1M    B.64K    C.32K    D.1K</p>
+</li>
+<li><p>8086/8088 微机系统内存单元的物理地址是 <strong>D</strong> 位的</p>
+<p>A.16    B.8    C.32    D.20</p>
+</li>
+<li><p>8086 CPU 执行一次 PUSH 指令，堆栈指针 SP 的值  <strong>D</strong></p>
+<p>A.加1    B.加2    C.减1    D.减2</p>
+</li>
+<li><p>如果AL的内容为50H，执行TEST AL，01H 指令后，AL的内容为 <strong>C</strong></p>
+<p>A.49H    B.4FH    C.50H    D.01H</p>
+</li>
+<li><p>8086/8088 CPU分成 <strong>C</strong> 两个部分，它们是并行工作的</p>
+<p>A.ALU和Cache    B.ALU和BLU    C.EU和BIU    D.EU和Cache</p>
+</li>
+<li><p>电子计算机的发展历程是（ ）、晶体管时代、（ ）、（ ）</p>
+</li>
+<li><p>系统总线分为数据总线、（ ）总线和 （ ）总线三种</p>
+</li>
+<li><p>8086/8088 系统中，存储器的逻辑地包括（ ）地址和（ ）地址</p>
+</li>
+<li><p>8086/8088 系统中，存储器是分段组织的，每段最大长度是（ ）字节</p>
+</li>
+<li><p>指令一般包括 （ ）、（ ）两部分</p>
+</li>
+<li><p>在8086/8088的通用寄存器AX、BC、CX、DX中，用作存储器间址的寄存器为？用作循环控制指令（LOOP）的寄存器为？</p>
+</li>
+<li><p>8086/8088的四个寄存器？用来存放数据段首地址的寄存器？用来存放代码段首地址的段寄存器？用来存放堆栈段首地址的段寄存器？</p>
+</li>
+<li><p>程序设计的基本结构有顺序结构、（）、（）</p>
+</li>
+<li><p>打印机是（ ）设备、扫描仪是（ ）设备</p>
+</li>
+<li><p>已知数据段有 100 个字节，DS=1200H，分别计算数据段段首、末单元的物理地址</p>
+<p><strong>12000H、12063H</strong></p>
+</li>
+<li><p>判断下列指令的正误，如果有错则简单说明错误原因</p>
+<p>SUB DATA1,[SI]    错，同为存储器操作数</p>
+<p>MUL 50H    错，不能是立即数</p>
+<p>MOV AX,[BX+1]    正确</p>
+<p>XOR AX,[DX]    错，不能用 DX 间接寻址</p>
+</li>
+<li><p>分别写出完成下面各任务的指令</p>
+<p>将AL寄存器的高四位置1，低四位保持不变    OR AL 0F0H</p>
+<p>将BX寄存器中的带符号数除以8    MOV CL，3    SAR BX，CL</p>
+<p>将DL寄存器中的小写字母的ASCII码转换为相应的大写字母    AND DL，0DFH</p>
 </li>
 <li><p>下面程序段实现的完整功能是：</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">SHL</span> <span class="built_in">BX</span>,<span class="number">1</span></span><br><span class="line">	<span class="keyword">JC</span> ONE</span><br><span class="line">	<span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="string">&#x27;0&#x27;</span></span><br><span class="line">	<span class="keyword">JMP</span> NEXT</span><br><span class="line"><span class="symbol">ONE:</span><span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="string">&#x27;1&#x27;</span></span><br><span class="line"><span class="symbol">NEXT:</span><span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span></span><br><span class="line">	<span class="keyword">INT</span> <span class="number">21H</span></span><br></pre></td></tr></table></figure>
@@ -1643,29 +1711,71 @@
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">//直接输出</span><br><span class="line">CODES <span class="meta">SEGMENT</span></span><br><span class="line">    <span class="meta">ASSUME</span> <span class="built_in">CS</span>:CODES</span><br><span class="line"><span class="symbol">START:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">1</span>	(从<span class="number">1</span>开始)</span><br><span class="line"><span class="symbol">NEXT:</span>    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span>	(显示单个字符)</span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">    <span class="keyword">INC</span> <span class="built_in">DL</span>		(<span class="built_in">DL</span>加<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">CMP</span> <span class="built_in">DL</span>,<span class="number">00</span>	(<span class="built_in">DL</span>和<span class="number">0</span>比较)	</span><br><span class="line">    <span class="keyword">JNZ</span> NEXT	(<span class="built_in">DL</span>不为<span class="number">0</span>，跳转)</span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">4CH</span>	(程序终止)</span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">CODES ENDS</span><br><span class="line">    END START</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">//一行一行输出</span><br><span class="line">CODES <span class="meta">SEGMENT</span></span><br><span class="line">    <span class="meta">ASSUME</span> <span class="built_in">CS</span>:CODES,<span class="built_in">DS</span>:DATAS,<span class="built_in">SS</span>:STACKS</span><br><span class="line"><span class="symbol">START:</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">AX</span>,DATAS</span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DS</span>,<span class="built_in">AX</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">1</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">BL</span>,<span class="number">1</span></span><br><span class="line"><span class="symbol">NEXT:</span>    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">    <span class="keyword">PUSH</span> <span class="built_in">DX</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">20H</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">    <span class="keyword">POP</span> <span class="built_in">DX</span></span><br><span class="line">    <span class="keyword">INC</span> <span class="built_in">BL</span></span><br><span class="line">    <span class="keyword">CMP</span> <span class="built_in">BL</span>,<span class="number">10H</span></span><br><span class="line">    <span class="keyword">JNZ</span> AGAIN</span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">BL</span>,<span class="number">1</span></span><br><span class="line">    <span class="keyword">PUSH</span> <span class="built_in">DX</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">0AH</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="built_in">DL</span>,<span class="number">0DH</span></span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">2</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">    <span class="keyword">POP</span> <span class="built_in">DX</span></span><br><span class="line"><span class="symbol">AGAIN:</span>   <span class="keyword">INC</span> <span class="built_in">DL</span></span><br><span class="line">    <span class="keyword">CMP</span> <span class="built_in">DL</span>,<span class="number">00</span></span><br><span class="line">    <span class="keyword">JNZ</span> NEXT</span><br><span class="line">    <span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">4CH</span></span><br><span class="line">    <span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">CODES ENDS</span><br><span class="line">    END START</span><br></pre></td></tr></table></figure></li>
 <li><p>输出“Hello World”</p>
 <figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">DATAS <span class="meta">SEGMENT</span></span><br><span class="line">	STRING <span class="built_in">DB</span> <span class="string">&#x27;Hello World!&#x27;</span>,<span class="number">13</span>,<span class="number">10</span>,<span class="string">&#x27;$&#x27;</span> </span><br><span class="line">	//<span class="number">13</span>和<span class="number">10</span>分别表示回车符和换行符的ASCII码，执行结果是回车换行；’$’是结束标志，否则不加’$’会出现乱码。</span><br><span class="line">DATAS ENDS</span><br><span class="line"> </span><br><span class="line">CODES <span class="meta">SEGMENT</span></span><br><span class="line">	<span class="meta">ASSUME</span>	<span class="built_in">CS</span>:CODES,<span class="built_in">DS</span>:DATAS</span><br><span class="line"><span class="symbol">START:</span></span><br><span class="line">	<span class="keyword">MOV</span> <span class="built_in">AX</span>,DATAS</span><br><span class="line">	<span class="keyword">MOV</span> <span class="built_in">DS</span>,<span class="built_in">AX</span></span><br><span class="line">	<span class="keyword">LEA</span> <span class="built_in">DX</span>,STRING</span><br><span class="line">	<span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">9</span>	//显示以$结尾的字符串</span><br><span class="line">	<span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">	<span class="keyword">MOV</span> <span class="number">AH</span>,<span class="number">4CH</span></span><br><span class="line">	<span class="keyword">INT</span> <span class="number">21H</span></span><br><span class="line">CODES ENDS</span><br><span class="line">	END START</span><br></pre></td></tr></table></figure></li>
+<li><p>DATA 开始的单元存放 15 个 8 位无符号数，要将其中的最小数找出来并存放在MIN单元。写出完成此功能的汇编语言程序片段</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">		<span class="keyword">LEA</span> <span class="built_in">BX</span>,DATA		<span class="comment">;DATA偏移地址送BX</span></span><br><span class="line">		<span class="keyword">MOV</span> <span class="built_in">CX</span>,<span class="number">14</span>		<span class="comment">;设循环次数</span></span><br><span class="line">		<span class="keyword">MOV</span> <span class="built_in">AL</span>,[<span class="built_in">BX</span>]		<span class="comment">;第一个带符号数送AL</span></span><br><span class="line"><span class="symbol">CHECK:</span>  <span class="keyword">INC</span> <span class="built_in">BX</span></span><br><span class="line">		<span class="keyword">CMP</span> <span class="built_in">AL</span>,[<span class="built_in">BX</span>]		<span class="comment">;两数比较</span></span><br><span class="line">		<span class="keyword">JNZ</span> DONE		<span class="comment">;如果AL中的数较小，则转DONE</span></span><br><span class="line">		<span class="keyword">MOV</span> <span class="built_in">AL</span>,[<span class="built_in">BX</span>]</span><br><span class="line"><span class="symbol">DONE:</span>	<span class="keyword">LOOP</span> CHECK		<span class="comment">;循环次数</span></span><br><span class="line">		<span class="keyword">MOV</span> MIN,<span class="built_in">AL</span>		<span class="comment">;存放最小数</span></span><br><span class="line">		<span class="keyword">HLT</span></span><br></pre></td></tr></table></figure></li>
 </ol>
-<h1 id="期末考"><a href="#期末考" class="headerlink" title="期末考"></a>期末考</h1><p><strong>以下内容全为猜题</strong></p>
-<ol>
+<h1 id="期末考"><a href="#期末考" class="headerlink" title="期末考"></a>期末考</h1><ol>
 <li><p>选择题（~16%</p>
-<p>微型计算机的基础知识、微型计算机结构和系统、8086 结构等</p>
-<p>估计八题</p>
 </li>
 <li><p>填空题（~25%</p>
-<p>数制编码转换：比如二进制转十六进制，原码反码补码</p>
-<p>寻址方式：判断寻址方式</p>
-<p>相关概念简答题</p>
 </li>
 <li><p>简答题（~20%</p>
-<p>寻址方式：写出寻址方式，写出标志位，或者判断寻址方式对错</p>
-<p>指令系统：分析指令，写出功能</p>
-<p>相关概念简答题：比如简述汇编程序的执行过程</p>
 </li>
 <li><p>程序阅读与理解（~25%</p>
-<p>估计看程序写结果、写出程序功能、程序改错</p>
-<p>估计五题</p>
 </li>
 <li><p>设计（程序）（~14%</p>
-<p>写程序，估计两题</p>
+</li>
+</ol>
+<ol>
+<li><p><strong>绪论</strong></p>
+<ol>
+<li><p>计算机中数的表示方法</p>
+<p>进制、码制</p>
+</li>
+<li><p>计算机的基本结构</p>
+<p>冯诺依曼结构</p>
+</li>
+<li><p>微型计算机结构和系统</p>
+<p>三大总线、存储器</p>
+</li>
+<li><p>微型计算机的发展概况</p>
+</li>
+</ol>
+</li>
+<li><p><strong>8086微处理器</strong></p>
+<ol>
+<li><p>8086 CPU的内部结构</p>
+<p>基本功能模块、寄存器</p>
+</li>
+<li><p>8086/8088 CPU的引脚功能</p>
+</li>
+<li><p>8086的存储器组织</p>
+<p>段地址和偏移地址、存储器的分体结构</p>
+</li>
+</ol>
+</li>
+<li><p><strong>寻址方式和指令系统</strong></p>
+<ol>
+<li><p>8086的寻址方式</p>
+<p>操作数种类、寻址方式</p>
+</li>
+<li><p>指令的机器码表示方法（了解）</p>
+</li>
+<li><p>8086的指令系统</p>
+<p>数据传送指令</p>
+<p>算术运算指令</p>
+<p>逻辑运算和移位指令</p>
+<p>字符串处理指令</p>
+<p>控制转移指令</p>
+</li>
+</ol>
+</li>
+<li><p><strong>汇编语言程序设计</strong></p>
+<ol>
+<li>汇编语言程序格式和伪指令</li>
+<li>DOS系统功能调用（BIOS中断调用不考）</li>
+<li>汇编语言程序设计方法与实例</li>
+</ol>
 </li>
 </ol>
 
@@ -2401,6 +2511,7 @@
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195427323.png" alt="image-20210623195427323" style="zoom: 67%;" />
 
 <p>接下来就是重复上面的工作，从每一个新状态出发，逐个输入每个项目点后面的符号，就是后移一位，又分别作为新的状态的核然后根据核找下面的同状态里的项目。找到找不动为止。</p>
+<p>（项目集标号（I0，I1…）最好按照广度优先搜索的方式标号）</p>
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623195506594.png" alt="image-20210623195506594" style="zoom:67%;" />
 
 <img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/image-20210623200427859.png" alt="image-20210623200427859" style="zoom:67%;" /></li>
@@ -2918,7 +3029,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2021/05/09/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" itemprop="url">Untitled</a></h1>
+                <a class="post-title-link" href="/2021/05/09/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/" itemprop="url">软件项目管理</a></h1>
         
 
         <div class="post-meta">
@@ -2970,8 +3081,7 @@
       
         
           
-            <p>title: 软件项目管理<br>date: 2021-05-09 19:17:28<br>tags: 软件项目管理<br>typora-root-url: ..</p>
-<h1 id="Reading"><a href="#Reading" class="headerlink" title="Reading"></a>Reading</h1><h2 id="Reading-1"><a href="#Reading-1" class="headerlink" title="Reading 1"></a>Reading 1</h2><p><a target="_blank" rel="noopener" href="https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/">Things You Should Never Do, Part I – Joel on Software</a></p>
+            <h1 id="Reading"><a href="#Reading" class="headerlink" title="Reading"></a>Reading</h1><h2 id="Reading-1"><a href="#Reading-1" class="headerlink" title="Reading 1"></a>Reading 1</h2><p><a target="_blank" rel="noopener" href="https://www.joelonsoftware.com/2000/04/06/things-you-should-never-do-part-i/">Things You Should Never Do, Part I – Joel on Software</a></p>
 <p>这是国外的老程序员 Joel Spolsky 在2000年写的文章。</p>
 <p>更详尽的带图表的分析:</p>
 <p><a href="https://link.zhihu.com/?target=http://vibratingmelon.com/2011/06/10/why-you-should-almost-never-rewrite-code-a-graphical-guide/">Why You Should (Almost) Never Rewrite Code – A Graphical Guide</a></p>
@@ -3112,7 +3222,7 @@
 <p>第三是团队 为了在有限生命里追寻创造世界的极致 为了拥有心灵的慰藉 为了对抗巨人…我们都需要团队 每一个bug都尽力去调 每一个部分都认真写好 netscape拥有看着或许业余但是战斗力强大的团队 有术业专攻的程序员与负责的项目经理 他们有机会成功 只是现实世界变化地有些超出程序员的想象罢了…</p>
 <p>第四是deadline 自己曾经说过追逐deadline是程序员的宿命 有了deadline 疏懒的我们才不至于躺在椅子上盯着屏幕睡成一具尸体</p>
 <h2 id="Watching-2"><a href="#Watching-2" class="headerlink" title="Watching 2"></a>Watching 2</h2><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/av95104425?from=search&seid=17939012131793680768">google谈话Eric Brechner: “AgileProject Management with Kanban” | Talksat Google_哔哩哔哩_bilibili</a></p>
-<p><strong>使用看板以最大限度地提高效率、可预测性、质量和价值</strong><br>使用看板，您花在软件项目上的每一分钟都能为客户增加价值。一本书可以帮助你实现这个目标：<em>敏捷项目管理与看板</em>。<br>作者埃里克·布雷奇纳在微软的Xbox工程团队中开创了看<br>板。现在，他告诉你如何让它为你的球队工作。<br>把这本书想象成”盒子里的看门人”：打开它，阅读快速启动指南，你启动和运行得<br>很快。随着您获得经验，Brechner 揭示了正确的团队规模、估计、满足最后期限、部署组件和服务、适应或从 Scrum 或传统瀑布演变等强大技术。<br>在旅程的每一步，您都会找到实用的建议、有用的清单和可操作的<br>课程。这确实是”盒子里的看板”：所有你需要提供突破的价值和质量。</p>
+<p><strong>使用看板以最大限度地提高效率、可预测性、质量和价值</strong><br>使用看板，您花在软件项目上的每一分钟都能为客户增加价值。一本书可以帮助你实现这个目标：<em>敏捷项目管理与看板</em>。<br>作者埃里克·布雷奇纳在微软的Xbox工程团队中开创了看板。现在，他告诉你如何让它为你的球队工作。<br>把这本书想象成”盒子里的看门人”：打开它，阅读快速启动指南，你启动和运行得很快。随着您获得经验，Brechner 揭示了正确的团队规模、估计、满足最后期限、部署组件和服务、适应或从 Scrum 或传统瀑布演变等强大技术。<br>在旅程的每一步，您都会找到实用的建议、有用的清单和可操作的课程。这确实是”盒子里的看板”：所有你需要提供突破的价值和质量。</p>
 <p><strong>看板技术：</strong></p>
 <ul>
 <li>开始与当前团队和项目一起提供持续的价值</li>
@@ -3248,12 +3358,12 @@
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/diantun00/article/details/81075007">(8条消息) 玩转Jenkins Pipeline_大宝鱼的博客-CSDN博客_jenkins pipeline</a></p>
 <h2 id="CI-CD-方法"><a href="#CI-CD-方法" class="headerlink" title="CI/CD 方法"></a>CI/CD 方法</h2><p>CI/CD是实现敏捷和Devops理念的一种方法。<br>具体而言，CI/CD 可让持续自动化和持续监控贯穿于应用的整个生命周期（从集成和测试阶段，到交付和部署）。这些关联的事务通常被统称为“CI/CD 管道”，由开发和运维团队以敏捷方式协同支持。</p>
 <p><strong>CI - 持续集成</strong></p>
-<p>CI是一种通过在应用开发阶段引入<strong>自动化</strong>来频繁向客户交付应用的方法。CI 的核心概念是持续集成、持续交付和持续部署。作为一个面向开发和运营团队的解决方案，CI 主要针对在集成新代码时所引发的问题（亦称“集成地狱”）。</p>
-<p>持续集成强调开发人员提交了新代码之后，立刻自动的进行构建、（单元）测试。根据测试结果，我们可以确定新代码和原有代码能否正确地集成在一起。</p>
+<p>持续集成（CI）是在源代码变更后自动检测、拉取、构建和（在大多数情况下）进行单元测试的过程。持续集成是启动管道的环节（尽管某些预验证 —— 通常称为 <em>上线前检查(pre-flight checks)</em> —— 有时会被归在持续集成之前）。</p>
+<p>持续集成的目标是快速确保开发人员新提交的变更是好的，并且适合在代码库中进一步使用。</p>
 <p><strong>CD - 持续交付</strong></p>
-<p>是一种软件工程方法，团队在短周期内生产软件，确保软件可以在任何时候可靠地发布，并且在发布时软件时手动发布</p>
-<p>它旨在以更高的速度和频率构建、测试和发布软件</p>
-<p>能够每次提交代码时立即构建，并可以将构建部署到生产环境中</p>
+<p>持续交付（CD）通常是指整个流程链（管道），它自动监测源代码变更并通过构建、测试、打包和相关操作运行它们以生成可部署的版本，基本上没有任何人为干预。</p>
+<p>持续交付在软件开发过程中的目标是自动化、效率、可靠性、可重复性和质量保障（通过持续测试）。</p>
+<p>持续交付包含持续集成（自动检测源代码变更、执行构建过程、运行单元测试以验证变更），持续测试（对代码运行各种测试以保障代码质量），和（可选）持续部署（通过管道发布版本自动提供给用户）。</p>
 <h2 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h2><p>Pipeline，简而言之，就是一套运行于Jenkins上的工作流框架，将原本独立运行于单个或者多个节点的任务连接起来，实现单个任务难以完成的复杂流程编排与可视化。</p>
 <p>Pipeline是Jenkins2.X的最核心的特性，帮助Jenkins实现从CI到CD与DevOps的转变</p>
 <p>Pipeline是一组插件，让Jenkins可以实现持续交付管道的落地和实施。</p>
@@ -3636,10 +3746,13 @@
 <p><strong>测试金字塔</strong></p>
 <img src="/images/%E8%BD%AF%E4%BB%B6%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86/6e738afc5d344faaad6418c296639b8f.png" alt="6e738afc5d344faaad6418c296639b8f" style="zoom:67%;" />
 
-<p>（1） <strong>尽可能地多做单元测试 和 集成测试</strong>，因为他们的执行速度相较于上层的几个测试类型来说快很多且相对稳定，可以一天多次执行。一般来说，我们都会将单元测试 和 集成测试 做到持续集成构建任务中去，比如放到Jenkins中每天定时执行1~2次，或者每次push代码到git仓库后执行，总之，就是要确保可以频繁执行以确保代码质量。</p>
+<p>（1） <strong>尽可能地多做 单元测试 和 集成测试</strong>，因为他们的执行速度相较于上层的几个测试类型来说快很多且相对稳定，可以一天多次执行。一般来说，我们都会将单元测试 和 集成测试 做到持续集成构建任务中去，比如放到Jenkins中每天定时执行1~2次，或者每次push代码到git仓库后执行，总之，就是要确保可以频繁执行以确保代码质量。</p>
 <p>（2） <strong>尽可能地少做 组件测试、端到端测试 和 探索性测试</strong>，因为他们的执行速度相较单元测试 和 集成测试 会慢很多，且不够稳定，无法做到一天多次执行，每次执行都要等很久才能获得反馈结果。但是，他们的覆盖面比下层的单元测试和集成测试要广一些。总之，就是要确保一定周期内或者关键节点时间执行以下这几个测试以确保软件质量。</p>
 <hr>
 <p>古德哈特定律（<em>Goodhart’s law</em>），是以 Charles Goodhart 的名字命名的，这是一个非常有名的定理：当一个政策变成目标，它将不再是一个好的政策。</p>
+<p><strong>当衡量标准成为目标时，它就不再是一个好的衡量标准</strong></p>
+<p>Goodhart软件开发定律的一个例子是代码行数。代码行数提供了一种衡量软件产品大小的方法。但是，当用作目标时，代码的质量会下降。</p>
+<p>应该根据软件本身的结构进行精炼或分离，而不是一个混乱的意大利面条式代码。</p>
 <h1 id="Other"><a href="#Other" class="headerlink" title="Other"></a>Other</h1><h2 id="书面文化-written-culture"><a href="#书面文化-written-culture" class="headerlink" title="书面文化 written-culture"></a>书面文化 written-culture</h2><p><a target="_blank" rel="noopener" href="https://producingoss.com/en/communications.html#written-culture">Chapter 6. Communications (producingoss.com)</a></p>
 <p>清晰写作的能力也许是在开源环境中最重要的技能。从长远来看，它比编程人才更重要。</p>
 <h2 id="人如其文-you-are-what-you-write"><a href="#人如其文-you-are-what-you-write" class="headerlink" title="人如其文 you-are-what-you-write"></a>人如其文 you-are-what-you-write</h2><p><a target="_blank" rel="noopener" href="https://producingoss.com/en/you-are-what-you-write.html">You Are What You Write (producingoss.com)</a></p>
@@ -3816,7 +3929,7 @@
 <p>显然是错的</p>
 </li>
 <li><p><strong>Don’t hire a tester. Ask the programmer to do testing, because you can save money spent on salary and the programmer knows the program better.</strong></p>
-<p><strong>不要聘请测试人员。 请程序员做测试，因为可以省钱 花在薪水上，程序员更了解程序。</strong> </p>
+<p><strong>不要聘请测试人员。 请程序员做测试，因为可以省钱花在薪水上，程序员更了解程序。</strong> </p>
 <p>错（开发和测试是软件生命周期的不同组成部分，专门的测试人员更能保证软件的高质量。）</p>
 </li>
 </ol>
@@ -4288,7 +4401,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
